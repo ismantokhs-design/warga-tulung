@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warga Tulung</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d6efd">
+</head>
+<body>
+  <h1>Aplikasi Warga Tulung</h1>
+  <button id="btnNotif">Aktifkan Notifikasi</button>
+
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js?v=1')
+        .then(() => console.log('SW v1 terdaftar!'))
+        .catch(err => console.error('Gagal daftar SW:', err));
+    }
+
+    // Minta izin Notifikasi
+    document.getElementById('btnNotif').addEventListener('click', () => {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          alert('Izin notifikasi diberikan!');
+        } else {
+          alert('Izin notifikasi ditolak/diblokir.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

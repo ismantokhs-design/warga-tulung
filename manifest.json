@@ -1,0 +1,21 @@
+{
+  "id": "/wargatulung/?v=1",
+  "name": "Warga Tulung",
+  "short_name": "Tulung",
+  "start_url": "./index.html?v=1",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d6efd",
+  "icons": [
+    {
+      "src": "icon.png?v=1",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png?v=1",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
