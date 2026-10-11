@@ -27,7 +27,7 @@ import {
 const pageFiles = {
   'profil': 'profil.html',
   'event': 'event.html',
-  'pesan': 'pesan.html', // <-- DITAMBAHKAN AGAR HALAMAN PESAN DAPAT DIMUAT DINAMIS
+  'pesan': 'pesan.html',
   'more': 'more.html',
   'admin-panel': 'kependudukan.html',
   'keuangan': 'keuangan.html',
@@ -78,7 +78,6 @@ async function loadPageContent(pageId) {
       console.error(`Gagal memuat ${pageFiles[pageId]}:`, err);
     }
   } else if (container.innerHTML.trim() !== "") {
-    // Jalankan ulang listener/render jika halaman sudah ada di DOM
     initDynamicFormEvents(pageId);
   }
 }
@@ -317,16 +316,27 @@ function initDynamicFormEvents(pageId) {
   }
 }
 
-// 7. SWITCH PAGE GLOBAL
+// 7. SWITCH PAGE GLOBAL (DIREVISI TOTAL AGAR RESPONSIVE & EKSPLISIT)
 window.switchPage = async function(pageId, element) {
   await loadPageContent(pageId);
 
-  document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+  // Sembunyikan semua halaman
+  document.querySelectorAll('.page').forEach(page => {
+    page.classList.remove('active');
+    page.style.display = 'none';
+  });
+
+  // Nonaktifkan semua indikator menu
   document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
   
+  // Tampilkan halaman tujuan
   const targetPage = document.getElementById(pageId);
-  if (targetPage) targetPage.classList.add('active');
+  if (targetPage) {
+    targetPage.classList.add('active');
+    targetPage.style.display = 'block';
+  }
 
+  // Tandai tombol nav yang diklik
   if (element) {
     element.classList.add('active');
   } else {
@@ -337,7 +347,11 @@ window.switchPage = async function(pageId, element) {
     }
   }
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Auto scroll area utama ke paling atas
+  const mainContainer = document.querySelector('.main-content');
+  if (mainContainer) {
+    mainContainer.scrollTop = 0;
+  }
 };
 
 // 8. REGISTER SERVICE WORKER
@@ -404,11 +418,11 @@ function listenInformasiTerbaruBeranda() {
   });
 }
 
-// 10. LISTEN AUTH STATUS
+// 10. LISTEN AUTH STATUS (DIPERBAIKI AGAR NAV MORE TAMPIL TANPA SYARAT)
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     document.getElementById("login-overlay").style.display = "none";
-    document.getElementById("app-container").style.display = "block";
+    document.getElementById("app-container").style.display = "flex";
 
     // JALANKAN LISTENER PAPAN INFORMASI BERANDA
     listenInformasiTerbaruBeranda();
@@ -446,18 +460,14 @@ onAuthStateChanged(auth, async (user) => {
       if (document.getElementById("dropdown-user-role")) {
         document.getElementById("dropdown-user-role").innerText = userData.role || "Warga";
       }
-
-      const userRole = (userData.role || "warga").toLowerCase();
-      const navMoreLink = document.getElementById("nav-more-link");
-
-      if (navMoreLink) {
-        if (userRole === "admin" || userRole === "pengurus") {
-          navMoreLink.classList.remove("hidden");
-        } else {
-          navMoreLink.classList.add("hidden");
-        }
-      }
     }
+
+    // PASTIKAN MENU LAINNYA TAMPIL & DAPAT DIKLIK
+    const navMoreLink = document.getElementById("nav-more-link");
+    if (navMoreLink) {
+      navMoreLink.classList.remove("hidden");
+    }
+
   } else {
     await loadLoginPage();
     clearLoginForm();
@@ -474,6 +484,20 @@ document.addEventListener("DOMContentLoaded", () => {
       clearLoginForm();
     }
   });
+
+  // DELEGATION KLIK GLOBAL UNTUK MENCEGAH KLIK NAV BOTTON KELUAR/SANGKUT
+  const bottomNav = document.querySelector(".bottom-nav");
+  if (bottomNav) {
+    bottomNav.addEventListener("click", (e) => {
+      const navItem = e.target.closest(".nav-item");
+      if (!navItem) return;
+
+      if (navItem.id === "nav-more-link") {
+        e.preventDefault();
+        window.switchPage('more', navItem);
+      }
+    });
+  }
 });
 
 // 12. LOAD USER KEPENDUDUKAN
@@ -568,7 +592,8 @@ function renderSettingUsersTable(users) {
       document.getElementById("group-user-password").style.display = "none";
       document.getElementById("btn-cancel-edit-user").classList.remove("hidden");
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const mainContainer = document.querySelector('.main-content');
+      if (mainContainer) mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
 

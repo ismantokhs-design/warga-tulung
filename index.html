@@ -13,11 +13,11 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* SEMBUNYIKAN SCROLLBAR VISUAL */
+    /* SEMBUNYIKAN SCROLLBAR VISUAL DI SEMUA BROWSER */
     ::-webkit-scrollbar {
-      display: none;
-      width: 0;
-      height: 0;
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
     }
 
     html, body {
@@ -29,8 +29,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+      -ms-overflow-style: none; /* IE dan Edge */
+      scrollbar-width: none; /* Firefox */
     }
 
     #login-overlay {
@@ -58,7 +58,7 @@
       overflow: hidden;
     }
 
-    /* Topbar Banner Header */
+    /* TOPBAR BANNER HEADER BERANDA */
     .topbar-banner {
       background-color: #E8F5E9;
       padding: 16px 16px 18px 16px;
@@ -66,6 +66,7 @@
       border-bottom-right-radius: 20px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
       flex-shrink: 0;
+      margin-bottom: 8px;
     }
 
     .topbar-header {
@@ -208,17 +209,27 @@
       margin-top: 2px;
     }
 
-    /* Main Content Container dengan Scroll Internal */
+    /* AREA UTAMA YANG BISA DI-SCROLL DENGAN BEBAS NAIK TURUN */
     .main-content {
-      padding: 16px;
-      flex-grow: 1;
-      overflow-y: auto;
+      width: 100%;
+      height: calc(100dvh - 54px);
+      padding: 12px 16px 100px 16px; /* Bottom padding 100px agar konten paling bawah tidak tertutup Bottom Nav */
+      flex: 1;
+      overflow-y: auto !important;
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 80px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .main-content::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
     }
 
     .page {
       display: none;
+      width: 100%;
     }
 
     .page.active {
@@ -365,6 +376,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
+      height: 54px;
       background-color: #FFFFFF;
       border-top: 1px solid #E2E8F0;
       display: flex;
@@ -416,58 +428,58 @@
   <!-- CONTAINER UTAMA APLIKASI -->
   <div class="app-container" id="app-container">
 
-    <!-- TOPBAR BANNER HEADER FIXED DI ATAS -->
-    <header class="topbar-banner">
-      <div class="topbar-header">
-        <h1 class="brand-title">WargaKu</h1>
-        
-        <!-- TOMBOL AVATAR BADGE -->
-        <div class="avatar-badge" id="user-avatar-initials" onclick="toggleProfileDropdown(event)">PR</div>
-
-        <!-- MENU DROPDOWN PROFILE -->
-        <div class="profile-dropdown hidden" id="profile-dropdown-menu">
-          <div class="dropdown-header">
-            <div class="dropdown-user-name" id="dropdown-user-name">Pengurus RT</div>
-            <div class="dropdown-user-role" id="dropdown-user-role">Admin RT</div>
-          </div>
-          
-          <div class="dropdown-item" onclick="openChangePasswordModal()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
-            <span>Ganti Password</span>
-          </div>
-
-          <div class="dropdown-item danger" id="btn-logout">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
-            <span>Keluar Akun</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- CARD USER PROFIL -->
-      <div class="profile-card">
-        <div class="profile-img-wrapper">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Foto Pengurus RT">
-        </div>
-        <div class="profile-info">
-          <div class="greeting" id="user-name">Selamat datang, Pengurus RT</div>
-          <div class="location" id="user-location">Memuat wilayah...</div>
-        </div>
-      </div>
-    </header>
-
-    <!-- AREA KONTEN UTAMA (SPA CONTAINER WITH INTERNAL SCROLL) -->
+    <!-- AREA KONTEN UTAMA (SPA CONTAINER WITH WORKING SCROLL) -->
     <main class="main-content">
       
       <!-- HALAMAN BERANDA -->
       <div id="beranda" class="page active">
+
+        <header class="topbar-banner">
+          <div class="topbar-header">
+            <h1 class="brand-title">WargaKu</h1>
+            
+            <!-- TOMBOL AVATAR BADGE -->
+            <div class="avatar-badge" id="user-avatar-initials" onclick="toggleProfileDropdown(event)">PR</div>
+
+            <!-- MENU DROPDOWN PROFILE -->
+            <div class="profile-dropdown hidden" id="profile-dropdown-menu">
+              <div class="dropdown-header">
+                <div class="dropdown-user-name" id="dropdown-user-name">Pengurus RT</div>
+                <div class="dropdown-user-role" id="dropdown-user-role">Admin RT</div>
+              </div>
+              
+              <div class="dropdown-item" onclick="openChangePasswordModal()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>Ganti Password</span>
+              </div>
+
+              <div class="dropdown-item danger" id="btn-logout">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="3" y2="12"></line>
+                </svg>
+                <span>Keluar Akun</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- CARD USER PROFIL -->
+          <div class="profile-card">
+            <div class="profile-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Foto Pengurus RT">
+            </div>
+            <div class="profile-info">
+              <div class="greeting" id="user-name">Selamat datang, Pengurus RT</div>
+              <div class="location" id="user-location">Memuat wilayah...</div>
+            </div>
+          </div>
+        </header>
+
         <h2 class="section-title">Statistik Kependudukan</h2>
         <p class="section-subtitle">Data ringkasan warga setempat</p>
 
@@ -504,7 +516,7 @@
 
       </div>
 
-      <!-- KONTEN PROFIL -->
+      <!-- KONTEN PROFIL WILAYAH -->
       <div id="profil" class="page"></div>
 
       <!-- HALAMAN EVENT -->

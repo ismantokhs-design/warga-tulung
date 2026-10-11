@@ -31,6 +31,20 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  const requestUrl = new URL(event.request.url);
+
+  // BYPASS/ABAIKAN REQUEST FIRESTORE, FIREBASE, DAN GOOGLE APIS
+  // Biarkan browser menanganinya secara langsung tanpa lalu-lintas Service Worker
+  if (
+    requestUrl.origin.includes('firestore.googleapis.com') ||
+    requestUrl.origin.includes('firebase') ||
+    requestUrl.origin.includes('googleapis.com') ||
+    event.request.method !== 'GET'
+  ) {
+    return;
+  }
+
+  // PENANGANAN FETCH STATIS (CACHE FIRST)
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request);

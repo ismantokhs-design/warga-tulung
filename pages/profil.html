@@ -1,7 +1,20 @@
 <style>
+  /* KUNCI UTAMA: MEMUNGKINKAN GESER NAIK TURUN DI DALAM CONTAINER */
   .profil-view-container {
-    padding-bottom: 16px;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none; /* IE & Edge */
+    scrollbar-width: none;  /* Firefox */
+    padding-bottom: 120px; /* Ruang ekstra agar bagian bawah tidak tertutup Bottom Nav */
     animation: fadeInProfil 0.2s ease-out;
+  }
+
+  /* Sembunyikan scrollbar visual */
+  .profil-view-container::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 
   @keyframes fadeInProfil {
