@@ -1,78 +1,219 @@
-<div style="margin-bottom: 12px;">
-  <button type="button" onclick="switchPage('pengaturan')" style="background: none; border: none; color: var(--primary-dark); font-weight: 700; cursor: pointer; font-size: 13px;">← Kembali ke Pengaturan</button>
-</div>
+<style>
+  .setting-user-container {
+    padding-bottom: 24px;
+    animation: fadeInSetting 0.25s ease-out;
+  }
 
-<div class="section-title">
-  <h2>Setting User & Hak Akses</h2>
-  <p>Tambah pengguna baru dan atur peran/hak akses akun warga atau pengurus.</p>
-</div>
+  @keyframes fadeInSetting {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-<!-- FORM ENTRI USER BARU -->
-<div class="auth-card" style="box-shadow: var(--shadow-sm); border: 1px solid var(--border); max-width: 100%; margin-bottom: 16px;">
-  <h2 style="font-size: 16px; margin-bottom: 4px;">Tambah Pengguna Baru</h2>
-  <p style="margin-bottom: 16px;">Entri akun baru untuk warga atau pengurus RT/RW.</p>
+  /* Header Section */
+  .setting-header {
+    margin-bottom: 18px;
+  }
 
-  <form id="form-setting-add-user">
-    <div class="form-group">
-      <label>Nama Lengkap</label>
-      <input type="text" id="setting-user-nama" class="form-control" placeholder="Sesuai KTP" required>
-    </div>
+  .setting-title {
+    color: #00796B;
+    font-size: 20px;
+    font-weight: 800;
+    margin: 0;
+  }
 
-    <div class="form-group">
-      <label>Email Registered</label>
-      <input type="email" id="setting-user-email" class="form-control" placeholder="warga@tulung.id" required>
-    </div>
+  .setting-subtitle {
+    color: #64748B;
+    font-size: 12px;
+    margin-top: 3px;
+  }
 
-    <div class="form-group">
-      <label>Kata Sandi</label>
-      <input type="password" id="setting-user-password" class="form-control" placeholder="Minimal 6 Karakter" required>
-    </div>
+  /* Card Box Component */
+  .setting-card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    border: 1px solid #E2E8F0;
+    padding: 18px 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    margin-bottom: 18px;
+  }
 
-    <div class="form-group">
-      <label>RT / RW</label>
-      <input type="text" id="setting-user-rtrw" class="form-control" value="RT 03 / RW 05, Desa Tulung" required>
-    </div>
+  .form-group-custom {
+    margin-bottom: 14px;
+  }
 
-    <div class="form-group">
-      <label>Peran / Role</label>
-      <select id="setting-user-role" class="form-control">
-        <option value="warga">Warga</option>
-        <option value="pengurus">Pengurus</option>
-        <option value="admin">Admin</option>
-      </select>
-    </div>
+  .form-group-custom label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #475467;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
 
-    <button type="submit" id="btn-submit-add-user" class="btn-primary">Tambah User Baru</button>
-  </form>
-</div>
+  .input-custom {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #0F172A;
+    background-color: #F8FAFC;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 10px;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
 
-<!-- KARTU PENCARIAN -->
-<div class="auth-card" style="box-shadow: var(--shadow-sm); border: 1px solid var(--border); max-width: 100%; margin-bottom: 16px;">
-  <div class="form-group" style="margin-bottom: 0;">
-    <label>Cari Pengguna</label>
-    <input type="text" id="search-setting-user" class="form-control" placeholder="Cari berdasarkan nama atau email...">
+  .input-custom:focus {
+    background-color: #FFFFFF;
+    border-color: #00796B;
+    box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.12);
+  }
+
+  /* Action Buttons */
+  .btn-action-primary {
+    width: 100%;
+    padding: 11px;
+    background-color: #00796B;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 6px;
+  }
+
+  .btn-action-primary:hover {
+    background-color: #004D40;
+  }
+
+  .btn-action-cancel {
+    width: 100%;
+    padding: 10px;
+    background-color: #F1F5F9;
+    color: #475467;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+
+  /* Table Section */
+  .table-responsive {
+    overflow-x: auto;
+    margin-top: 10px;
+  }
+
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .user-table th {
+    background-color: #F8FAFC;
+    color: #64748B;
+    font-weight: 700;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1.5px solid #E2E8F0;
+    white-space: nowrap;
+  }
+
+  .user-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #F1F5F9;
+    color: #0F172A;
+  }
+
+  /* Role Badges */
+  .badge-role {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+
+  .badge-admin { background-color: #DEF7EC; color: #03543F; }
+  .badge-pengurus { background-color: #E1EFFE; color: #1E429F; }
+  .badge-warga { background-color: #F3F4F6; color: #374151; }
+</style>
+
+<div class="setting-user-container">
+  
+  <!-- HEADER HALAMAN -->
+  <div class="setting-header">
+    <h2 class="setting-title" id="form-user-title">Keamanan & Akun Pengguna</h2>
+    <p class="setting-subtitle" id="form-user-desc">Kelola entri pengguna serta hak akses akun warga & pengurus.</p>
   </div>
-</div>
 
-<!-- TABEL MANAJEMEN USER & EDIT ROLE -->
-<div class="auth-card" style="box-shadow: var(--shadow-sm); border: 1px solid var(--border); max-width: 100%;">
-  <h2 style="font-size: 16px; margin-bottom: 4px;">Daftar Pengguna & Hak Akses</h2>
-  <p style="margin-bottom: 16px;">Perubahan dropdown role akan langsung tersimpan otomatis ke Firestore.</p>
+  <!-- FORM EDIT/TAMBAH PENGGUNA -->
+  <div class="setting-card">
+    <form id="form-setting-add-user">
+      <input type="hidden" id="setting-user-edit-id" value="">
 
-  <div class="table-responsive">
-    <table class="users-table">
-      <thead>
-        <tr>
-          <th>Pengguna</th>
-          <th>RT / RW</th>
-          <th>Aksi Peran / Role</th>
-        </tr>
-      </thead>
-      <tbody id="setting-users-tbody">
-        <tr>
-          <td colspan="3" class="text-center">Memuat data pengguna dari Firebase...</td>
-        </tr>
-      </tbody>
-    </table>
+      <div class="form-group-custom">
+        <label>NAMA LENGKAP</label>
+        <input type="text" id="setting-user-nama" class="input-custom" placeholder="Contoh: Budi Santoso" required>
+      </div>
+
+      <div class="form-group-custom">
+        <label>EMAIL / USERNAME</label>
+        <input type="email" id="setting-user-email" class="input-custom" placeholder="nama@wargaku.com" required>
+      </div>
+
+      <div class="form-group-custom" id="group-user-password">
+        <label>KATA SANDI</label>
+        <input type="password" id="setting-user-password" class="input-custom" placeholder="••••••••">
+      </div>
+
+      <div class="form-group-custom">
+        <label>RT / RW</label>
+        <input type="text" id="setting-user-rtrw" class="input-custom" placeholder="RT 03 / RW 05" required>
+      </div>
+
+      <div class="form-group-custom">
+        <label>PERAN (ROLE)</label>
+        <select id="setting-user-role" class="input-custom" required>
+          <option value="warga">Warga</option>
+          <option value="pengurus">Pengurus RT</option>
+          <option value="admin">Admin System</option>
+        </select>
+      </div>
+
+      <button type="submit" id="btn-submit-add-user" class="btn-action-primary">Tambah User Baru</button>
+      <button type="button" id="btn-cancel-edit-user" class="btn-action-cancel hidden">Batal Edit</button>
+    </form>
   </div>
+
+  <!-- TABEL DAFTAR PENGGUNA -->
+  <div class="setting-card">
+    <div style="margin-bottom: 12px;">
+      <label style="font-size: 11px; font-weight: 700; color: #64748B;">CARI PENGGUNA</label>
+      <input type="text" id="search-setting-user" class="input-custom" placeholder="Ketik nama atau email..." style="margin-top: 4px;">
+    </div>
+
+    <div class="table-responsive">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Pengguna</th>
+            <th>Role</th>
+            <th style="text-align: center;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="setting-users-tbody">
+          <tr>
+            <td colspan="3" style="text-align: center; color: #94A3B8;">Memuat data pengguna...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>

@@ -1,35 +1,277 @@
-<div class="auth-card" id="auth-card-login">
-  <h2>Masuk WargaTulung</h2>
-  <p>Akses akun warga yang telah didaftarkan oleh Admin.</p>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - WargaKu</title>
   
-  <div id="login-error-msg" class="hidden" style="background-color: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 10px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <span id="login-error-text">Email atau kata sandi tidak sesuai. Silakan coba lagi.</span>
-  </div>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-  <form id="form-login">
-    <div class="form-group">
-      <label>Email Registered</label>
-      <input type="email" id="login-email" class="form-control" placeholder="warga@tulung.id" required autocomplete="username">
+    body {
+      background-color: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    /* Container Utama Card */
+    .auth-card-green {
+      background: #ffffff;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      border: 1px solid #eef2f5;
+    }
+
+    /* Brand Header - Senter Tengah */
+    .brand-header {
+      background-color: #E8F5E9; /* Warna hijau mint muda */
+      padding: 28px 24px 20px 24px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-header .brand-logo {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+
+    .brand-title {
+      color: #00796B; /* Warna hijau tua WargaKu */
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin: 0;
+    }
+
+    .brand-subtitle {
+      color: #5F6D7E;
+      font-size: 13px;
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    /* Pesan Error */
+    .error-badge-green {
+      margin: 16px 24px 0 24px;
+      padding: 10px 12px;
+      background-color: #FDE8E8;
+      border: 1px solid #F8B4B4;
+      border-radius: 10px;
+      color: #E02424;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Form Area */
+    #form-login {
+      padding: 24px;
+    }
+
+    .form-group-green {
+      margin-bottom: 16px;
+    }
+
+    .form-group-green label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #475467;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .input-inner-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      color: #98A2B3;
+      pointer-events: none;
+    }
+
+    .form-control-green {
+      width: 100%;
+      padding: 11px 12px 11px 38px;
+      font-size: 13px;
+      color: #1D2939;
+      background-color: #FFFFFF;
+      border: 1.5px solid #D0D5DD;
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-control-green:focus {
+      border-color: #00796B;
+      box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.12);
+    }
+
+    .toggle-password-green {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      color: #98A2B3;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-password-green:hover {
+      color: #344054;
+    }
+
+    .forgot-pass-wrapper {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .forgot-pass-link {
+      font-size: 12px;
+      color: #00796B;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .forgot-pass-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Tombol Utama */
+    .btn-primary-green {
+      width: 100%;
+      padding: 12px;
+      background-color: #00796B;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary-green:hover {
+      background-color: #004D40;
+    }
+
+    /* Footer */
+    .login-footer {
+      text-align: center;
+      padding: 0 24px 20px 24px;
+    }
+
+    .login-footer p {
+      margin: 0 0 2px 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: #344054;
+    }
+
+    .login-footer span {
+      font-size: 10px;
+      color: #98A2B3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-card-green" id="auth-card-login">
+    <!-- BRAND HEADER (Senter Tengah) -->
+    <div class="brand-header">
+      <img src="icon.png?v=1" alt="Logo WargaKu" class="brand-logo">
+      <h2 class="brand-title">WargaKu</h2>
+      <p class="brand-subtitle">Sistem Informasi Administrasi & Kependudukan</p>
     </div>
 
-    <div class="form-group">
-      <label>Kata Sandi</label>
-      <div class="password-wrapper">
-        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
-        <button type="button" class="toggle-password" id="btn-toggle-pass" aria-label="Lihat Password">
-          <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
+    <!-- PESAN ERROR -->
+    <div id="login-error-msg" class="hidden error-badge-green">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span id="login-error-text">Email atau kata sandi tidak sesuai. Silakan coba lagi.</span>
+    </div>
+
+    <!-- FORM LOGIN -->
+    <form id="form-login">
+      <div class="form-group-green">
+        <label>EMAIL / USERNAME</label>
+        <div class="input-inner-wrapper">
+          <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
           </svg>
-        </button>
+          <input type="email" id="login-email" class="form-control-green" placeholder="Contoh: admin@wargaku.com" required autocomplete="username">
+        </div>
       </div>
+
+      <div class="form-group-green">
+        <label>PASSWORD</label>
+        <div class="input-inner-wrapper">
+          <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input type="password" id="login-password" class="form-control-green" placeholder="••••••••" required autocomplete="current-password">
+          <button type="button" class="toggle-password-green" id="btn-toggle-pass" aria-label="Lihat Password">
+            <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="forgot-pass-wrapper">
+        <a href="#" class="forgot-pass-link" onclick="alert('Silakan hubungi Pengurus RT untuk reset password.'); return false;">Lupa Password?</a>
+      </div>
+
+      <button type="submit" id="btn-submit-login" class="btn-primary-green">
+        MASUK SISTEM 
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left: 6px;">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+        </svg>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>Potrobayan • Srihardono • Pundong • Bantul</p>
+      <span>Copyright This Application 2026</span>
     </div>
-
-    <button type="submit" id="btn-submit-login" class="btn-primary">Masuk Aplikasi</button>
-  </form>
-
-  <div style="margin-top: 24px; text-align: center; font-size: 12px; color: var(--text-muted);">
-    Copyright This-Application 2026
   </div>
-</div>
+
+</body>
+</html>

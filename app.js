@@ -15,9 +15,19 @@ import {
   onSnapshot 
 } from "./firebase-config.js";
 
+import { 
+  initProfilWilayahModule, 
+  displayReadonlyProfilWilayah 
+} from "./modules/profil-wilayah.js";
+
+// PEMETAAN FILE HTML DALAM FOLDER PAGES
 const pageFiles = {
+  'profil': 'profil.html',
   'more': 'more.html',
   'admin-panel': 'kependudukan.html',
+  'keuangan': 'keuangan.html',
+  'laporan': 'laporan.html',
+  'grafik': 'grafik.html',
   'pengaturan': 'pengaturan.html',
   'setting-user': 'setting-user.html',
   'profil-wilayah': 'profil-wilayah.html'
@@ -25,16 +35,36 @@ const pageFiles = {
 
 let globalUsersList = [];
 
-// 1. LOAD KONTEN HALAMAN DINAMIS VIA FETCH
+// 1. HANDLER DROPDOWN PROFILE & GANTI PASSWORD
+window.toggleProfileDropdown = function(event) {
+  event.stopPropagation();
+  const dropdown = document.getElementById("profile-dropdown-menu");
+  if (dropdown) {
+    dropdown.classList.toggle("hidden");
+  }
+};
+
+document.addEventListener("click", () => {
+  const dropdown = document.getElementById("profile-dropdown-menu");
+  if (dropdown && !dropdown.classList.contains("hidden")) {
+    dropdown.classList.add("hidden");
+  }
+});
+
+window.openChangePasswordModal = function() {
+  alert("Fitur Ganti Password dapat dihubungkan ke Firebase updatePassword.");
+};
+
+// 2. LOAD KONTEN DINAMIS DARI FOLDER PAGES
 async function loadPageContent(pageId) {
   const container = document.getElementById(pageId);
-  
-  if (container && pageFiles[pageId] && container.getAttribute("data-loaded") !== "true") {
+  if (!container) return;
+
+  if (pageFiles[pageId] && container.innerHTML.trim() === "") {
     try {
       const res = await fetch(`./pages/${pageFiles[pageId]}`);
       if (res.ok) {
         container.innerHTML = await res.text();
-        container.setAttribute("data-loaded", "true");
         initDynamicFormEvents(pageId);
       } else {
         console.error(`Gagal mengambil file ./pages/${pageFiles[pageId]}`);
@@ -42,10 +72,13 @@ async function loadPageContent(pageId) {
     } catch (err) {
       console.error(`Gagal memuat ${pageFiles[pageId]}:`, err);
     }
+  } else if (container.innerHTML.trim() !== "") {
+    // Jalankan ulang listener/render jika halaman sudah ada di DOM
+    initDynamicFormEvents(pageId);
   }
 }
 
-// 2. LOAD LOGIN OVERLAY
+// 3. LOAD LOGIN OVERLAY
 async function loadLoginPage() {
   const loginOverlay = document.getElementById("login-overlay");
   if (loginOverlay && loginOverlay.innerHTML.trim() === "") {
@@ -61,7 +94,7 @@ async function loadLoginPage() {
   }
 }
 
-// 3. RESET FORM LOGIN
+// 4. RESET FORM LOGIN
 function clearLoginForm() {
   const formLogin = document.getElementById("form-login");
   const inputPassword = document.getElementById("login-password");
@@ -73,11 +106,11 @@ function clearLoginForm() {
 
   if (inputPassword && eyeIcon) {
     inputPassword.type = "password";
-    eyeIcon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+    eyeIcon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
   }
 }
 
-// 4. EVENT LOGIN & SHOW/HIDE PASSWORD
+// 5. EVENT LOGIN & TOGGLE PASSWORD
 function initLoginEvents() {
   const btnToggle = document.getElementById("btn-toggle-pass");
   if (btnToggle) {
@@ -88,8 +121,8 @@ function initLoginEvents() {
         const isPass = input.type === "password";
         input.type = isPass ? "text" : "password";
         icon.innerHTML = isPass 
-          ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`
-          : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+          ? `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`
+          : `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
       }
     });
   }
@@ -131,7 +164,7 @@ function initLoginEvents() {
       } catch (err) {
         if (errorMsg && errorText) {
           if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
-            errorText.innerText = "Email atau kata sandi salah. Silakan periksa kembali.";
+            errorText.innerText = "Email atau kata sandi tidak sesuai. Silakan coba lagi.";
           } else if (err.code === "auth/too-many-requests") {
             errorText.innerText = "Terlalu banyak percobaan gagal. Silakan tunggu beberapa saat.";
           } else {
@@ -153,16 +186,20 @@ function initLoginEvents() {
       } finally {
         if (btnSubmit) {
           btnSubmit.disabled = false;
-          btnSubmit.innerText = "Masuk Aplikasi";
+          btnSubmit.innerHTML = `MASUK SISTEM <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left: 6px;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>`;
         }
       }
     });
   }
 }
 
-// 5. INISIALISASI EVENT DYNAMIC PAGES
+// 6. INISIALISASI EVENT DYNAMIC PAGES
 function initDynamicFormEvents(pageId) {
-  // A. KEPENDUDUKAN
+  // Buka Halaman Profil Readonly
+  if (pageId === 'profil') {
+    displayReadonlyProfilWilayah();
+  }
+
   if (pageId === 'admin-panel') {
     const formRegister = document.getElementById("form-register-warga");
     if (formRegister) {
@@ -198,7 +235,6 @@ function initDynamicFormEvents(pageId) {
     loadUsersTable();
   }
 
-  // B. SETTING USER
   if (pageId === 'setting-user') {
     loadSettingUsersRealtime();
 
@@ -272,39 +308,13 @@ function initDynamicFormEvents(pageId) {
     }
   }
 
-  // C. PROFIL WILAYAH
+  // Modul Formulir Profil Wilayah (Entri / Edit)
   if (pageId === 'profil-wilayah') {
-    loadProfilWilayahData();
-
-    const formWilayah = document.getElementById("form-profil-wilayah");
-    if (formWilayah) {
-      formWilayah.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById("btn-simpan-profil");
-        if (btn) btn.innerText = "Menyimpan...";
-
-        try {
-          await setDoc(doc(db, "profil", "wilayah"), {
-            rt: document.getElementById("wilayah-rt").value,
-            rw: document.getElementById("wilayah-rw").value,
-            desa: document.getElementById("wilayah-desa").value,
-            kecamatan: document.getElementById("wilayah-kecamatan").value,
-            alamat: document.getElementById("wilayah-alamat").value,
-            updatedAt: new Date()
-          }, { merge: true });
-
-          alert("Profil Wilayah berhasil disimpan!");
-        } catch (err) {
-          alert("Gagal menyimpan profil: " + err.message);
-        } finally {
-          if (btn) btn.innerText = "Simpan Ke Firestore";
-        }
-      });
-    }
+    initProfilWilayahModule();
   }
 }
 
-// 6. SWITCH PAGE GLOBAL
+// 7. SWITCH PAGE GLOBAL
 window.switchPage = async function(pageId, element) {
   await loadPageContent(pageId);
 
@@ -323,9 +333,11 @@ window.switchPage = async function(pageId, element) {
       moreNav.classList.add('active');
     }
   }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// 7. REGISTER SERVICE WORKER
+// 8. REGISTER SERVICE WORKER
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -334,7 +346,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// 8. LISTEN AUTH
+// 9. LISTEN AUTH STATUS
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     document.getElementById("login-overlay").style.display = "none";
@@ -343,18 +355,33 @@ onAuthStateChanged(auth, async (user) => {
     const userDoc = await getDoc(doc(db, "users", user.uid));
     if (userDoc.exists()) {
       const userData = userDoc.data();
-      document.getElementById("user-name").innerText = "Selamat datang, " + userData.nama;
-      document.getElementById("user-location").innerText = userData.rt_rw;
+      const nama = userData.nama || "Pengguna";
+      document.getElementById("user-name").innerText = "Selamat datang, " + nama;
+      document.getElementById("user-location").innerText = userData.rt_rw || "RT 03 / RW 05";
+
+      // KELOLA INISIAL AVATAR DAN KETERANGAN DROPDOWN
+      const initials = nama.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      if (document.getElementById("user-avatar-initials")) {
+        document.getElementById("user-avatar-initials").innerText = initials || "PE";
+      }
+      if (document.getElementById("dropdown-user-name")) {
+        document.getElementById("dropdown-user-name").innerText = nama;
+      }
+      if (document.getElementById("dropdown-user-role")) {
+        document.getElementById("dropdown-user-role").innerText = userData.role || "Warga";
+      }
 
       const userRole = (userData.role || "warga").toLowerCase();
       const navMoreLink = document.getElementById("nav-more-link");
 
-      if (userRole === "admin" || userRole === "pengurus") {
-        navMoreLink.classList.remove("hidden");
-        navMoreLink.style.display = "flex";
-      } else {
-        navMoreLink.classList.add("hidden");
-        navMoreLink.style.display = "none";
+      if (navMoreLink) {
+        if (userRole === "admin" || userRole === "pengurus") {
+          navMoreLink.classList.remove("hidden");
+          navMoreLink.style.display = "flex";
+        } else {
+          navMoreLink.classList.add("hidden");
+          navMoreLink.style.display = "none";
+        }
       }
     }
   } else {
@@ -365,18 +392,17 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// 9. LOGOUT
+// 10. LOGOUT
 document.addEventListener("DOMContentLoaded", () => {
-  const btnLogout = document.getElementById("btn-logout");
-  if (btnLogout) {
-    btnLogout.addEventListener("click", async () => {
+  document.body.addEventListener("click", async (e) => {
+    if (e.target && (e.target.id === "btn-logout" || e.target.closest("#btn-logout"))) {
       await signOut(auth);
       clearLoginForm();
-    });
-  }
+    }
+  });
 });
 
-// 10. LOAD USER KEPENDUDUKAN
+// 11. LOAD USER KEPENDUDUKAN
 function loadUsersTable() {
   const usersRef = collection(db, "users");
   onSnapshot(usersRef, (snapshot) => {
@@ -404,7 +430,7 @@ function loadUsersTable() {
   });
 }
 
-// 11. LOAD USER SETTING USER
+// 12. LOAD USER SETTING USER
 function loadSettingUsersRealtime() {
   const usersRef = collection(db, "users");
   onSnapshot(usersRef, (snapshot) => {
@@ -516,23 +542,6 @@ function resetUserForm() {
 
   const btnCancel = document.getElementById("btn-cancel-edit-user");
   if (btnCancel) btnCancel.classList.add("hidden");
-}
-
-// 12. LOAD PROFIL WILAYAH
-async function loadProfilWilayahData() {
-  try {
-    const docSnap = await getDoc(doc(db, "profil", "wilayah"));
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      if (document.getElementById("wilayah-rt")) document.getElementById("wilayah-rt").value = data.rt || "";
-      if (document.getElementById("wilayah-rw")) document.getElementById("wilayah-rw").value = data.rw || "";
-      if (document.getElementById("wilayah-desa")) document.getElementById("wilayah-desa").value = data.desa || "";
-      if (document.getElementById("wilayah-kecamatan")) document.getElementById("wilayah-kecamatan").value = data.kecamatan || "";
-      if (document.getElementById("wilayah-alamat")) document.getElementById("wilayah-alamat").value = data.alamat || "";
-    }
-  } catch (err) {
-    console.error("Gagal membaca profil wilayah:", err);
-  }
 }
 
 // 13. STATISTIK
