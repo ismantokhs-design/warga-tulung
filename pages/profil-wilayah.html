@@ -1,0 +1,42 @@
+<div style="margin-bottom: 12px;">
+  <button type="button" onclick="window.switchPage('pengaturan')" style="background: none; border: none; color: var(--primary-dark); font-weight: 700; cursor: pointer; font-size: 13px;">← Kembali ke Pengaturan</button>
+</div>
+
+<div class="section-title">
+  <h2>Profil Wilayah RT / RW</h2>
+  <p>Kelola informasi umum dan identitas administrasi wilayah setempat.</p>
+</div>
+
+<div class="auth-card" style="box-shadow: var(--shadow-sm); border: 1px solid var(--border); max-width: 100%;">
+  <h2>Entri / Edit Data Wilayah</h2>
+  <p>Data yang tersimpan di Firestore akan otomatis diperbarui di aplikasi.</p>
+
+  <form id="form-profil-wilayah">
+    <div class="form-group">
+      <label>Nama Rukun Tetangga (RT)</label>
+      <input type="text" id="wilayah-rt" class="form-control" placeholder="Contoh: RT 03" required>
+    </div>
+
+    <div class="form-group">
+      <label>Nama Rukun Warga (RW)</label>
+      <input type="text" id="wilayah-rw" class="form-control" placeholder="Contoh: RW 05" required>
+    </div>
+
+    <div class="form-group">
+      <label>Desa / Kelurahan</label>
+      <input type="text" id="wilayah-desa" class="form-control" placeholder="Contoh: Desa Tulung" required>
+    </div>
+
+    <div class="form-group">
+      <label>Kecamatan & Kabupaten</label>
+      <input type="text" id="wilayah-kecamatan" class="form-control" placeholder="Contoh: Kec. Tulung, Kab. Klaten" required>
+    </div>
+
+    <div class="form-group">
+      <label>Alamat Sekretariat RT</label>
+      <textarea id="wilayah-alamat" class="form-control" rows="3" placeholder="Alamat lengkap balai warga..." style="resize: vertical;"></textarea>
+    </div>
+
+    <button type="submit" id="btn-simpan-profil" class="btn-primary">Simpan Ke Firestore</button>
+  </form>
+</div>

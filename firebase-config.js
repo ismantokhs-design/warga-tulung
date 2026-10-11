@@ -11,6 +11,8 @@ import {
   doc, 
   setDoc, 
   getDoc, 
+  updateDoc,
+  deleteDoc,
   collection,
   onSnapshot 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -35,7 +37,6 @@ const db = getFirestore(app);
 const secondaryApp = initializeApp(firebaseConfig, "SecondaryAuthApp");
 const secondaryAuth = getAuth(secondaryApp);
 
-// Export semua fungsi & instance yang dibutuhkan
 export {
   auth,
   db,
@@ -47,6 +48,8 @@ export {
   doc,
   setDoc,
   getDoc,
+  updateDoc,
+  deleteDoc,
   collection,
   onSnapshot
 };
