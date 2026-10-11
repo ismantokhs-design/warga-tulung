@@ -4,31 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Warga Tulung</title>
-  <link rel="manifest" href="manifest.json">
+
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json?v=1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon.png?v=1">
+  <link rel="apple-touch-icon" href="icon2.png?v=1">
   <meta name="theme-color" content="#0d6efd">
+
+  <!-- Style CSS Kamu -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Aplikasi Warga Tulung</h1>
-  <button id="btnNotif">Aktifkan Notifikasi</button>
 
+  <h1>Warga Tulung</h1>
+
+  <!-- Script Registrasi Service Worker -->
   <script>
-    // Register Service Worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=1')
-        .then(() => console.log('SW v1 terdaftar!'))
-        .catch(err => console.error('Gagal daftar SW:', err));
-    }
-
-    // Minta izin Notifikasi
-    document.getElementById('btnNotif').addEventListener('click', () => {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          alert('Izin notifikasi diberikan!');
-        } else {
-          alert('Izin notifikasi ditolak/diblokir.');
-        }
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js', { scope: '/warga-tulung/' })
+          .then(reg => {
+            console.log('SW Warga Tulung berhasil terdaftar:', reg.scope);
+          })
+          .catch(err => {
+            console.error('Gagal mendaftarkan SW Warga Tulung:', err);
+          });
       });
-    });
+    }
   </script>
 </body>
 </html>
