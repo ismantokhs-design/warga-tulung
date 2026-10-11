@@ -14,7 +14,11 @@ import {
   updateDoc,
   deleteDoc,
   collection,
-  onSnapshot 
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  limit // <-- DITAMBAHKAN DI SINI
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Konfigurasi Firebase Project Warga Tulung
@@ -51,5 +55,9 @@ export {
   updateDoc,
   deleteDoc,
   collection,
-  onSnapshot
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  limit // <-- DITAMBAHKAN DI SINI
 };

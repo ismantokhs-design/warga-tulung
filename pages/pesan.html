@@ -1,0 +1,475 @@
+<style>
+  .pesan-page-container {
+    padding: 0 0 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    animation: fadeInPage 0.2s ease-out;
+  }
+
+  @keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* TOPBAR CLEAN & PUTIH MINIMALIS */
+  .pesan-topbar-clean {
+    background: #F8FAFC;
+    padding: 8px 0 10px 0;
+  }
+
+  .pesan-topbar-title {
+    color: #00796B;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin-bottom: 2px;
+  }
+
+  .pesan-topbar-subtitle {
+    color: #64748B;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  /* KARTU FORMULIR SARAN & KRITIK */
+  .pesan-form-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 14px 12px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  }
+
+  .pesan-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .pesan-form-title-text {
+    font-size: 13px;
+    font-weight: 800;
+    color: #0F172A;
+  }
+
+  .pesan-btn-cancel-edit {
+    background: #F1F5F9;
+    color: #64748B;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .pesan-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .pesan-form-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #334155;
+  }
+
+  .pesan-form-select, 
+  .pesan-form-input, 
+  .pesan-form-textarea {
+    width: 100%;
+    padding: 8.5px 10px;
+    border: 1.2px solid #CBD5E1;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #0F172A;
+    background: #F8FAFC;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .pesan-form-select:focus, 
+  .pesan-form-input:focus, 
+  .pesan-form-textarea:focus {
+    border-color: #00875A;
+    background: #FFFFFF;
+  }
+
+  .pesan-form-textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  .pesan-btn-submit {
+    width: 100%;
+    background-color: #00875A;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background-color 0.15s ease;
+  }
+
+  .pesan-btn-submit:hover {
+    background-color: #00704A;
+  }
+
+  .pesan-btn-submit:disabled {
+    background-color: #94A3B8;
+    cursor: not-allowed;
+  }
+
+  /* LIST RIWAYAT PESAN SARAN */
+  .pesan-history-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pesan-history-title {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #0A3966;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+  }
+
+  .pesan-item-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 12px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .pesan-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pesan-badge-kategori {
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2.5px 7px;
+    border-radius: 6px;
+    text-transform: uppercase;
+  }
+
+  .badge-saran { background: #E0F2FE; color: #0369A1; }
+  .badge-kritik { background: #FEE2E2; color: #B91C1C; }
+  .badge-pertanyaan { background: #FEF3C7; color: #B45309; }
+
+  .pesan-item-date {
+    font-size: 10px;
+    color: #94A3B8;
+  }
+
+  .pesan-item-subjek {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0F172A;
+  }
+
+  .pesan-item-isi {
+    font-size: 11.5px;
+    color: #475569;
+    line-height: 1.35;
+  }
+
+  .pesan-action-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    border-top: 1px dashed #F1F5F9;
+    padding-top: 6px;
+    margin-top: 2px;
+  }
+
+  .pesan-btn-edit, .pesan-btn-delete {
+    border: none;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .pesan-btn-edit { background: #EFF6FF; color: #2563EB; }
+  .pesan-btn-delete { background: #FEF2F2; color: #EF4444; }
+
+  .pesan-empty-box {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 18px 12px;
+    text-align: center;
+    color: #94A3B8;
+    font-size: 11.5px;
+    font-style: italic;
+    border: 1px solid #E2E8F0;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+</style>
+
+<div class="pesan-page-container">
+
+  <!-- TOPBAR CLEAN & PUTIH MINIMALIS -->
+  <div class="pesan-topbar-clean">
+    <h2 class="pesan-topbar-title">Saran & Kritik</h2>
+    <p class="pesan-topbar-subtitle">Sampaikan aspirasi, saran, atau kritik Anda untuk kemajuan bersama</p>
+  </div>
+
+  <!-- FORMULIR INPUT / EDIT PESAN SARAN KRITIK -->
+  <div class="pesan-form-card">
+    <div class="pesan-form-header">
+      <span class="pesan-form-title-text" id="pesan-form-title">Tulis Pesan Baru</span>
+      <button type="button" id="btn-cancel-edit-pesan" class="pesan-btn-cancel-edit hidden">Batal Edit</button>
+    </div>
+
+    <form id="form-saran-kritik">
+      <input type="hidden" id="pesan-edit-id" value="">
+
+      <div class="pesan-form-group">
+        <label class="pesan-form-label" for="pesan-kategori">Kategori Pesan</label>
+        <select id="pesan-kategori" class="pesan-form-select" required>
+          <option value="Saran">Saran</option>
+          <option value="Kritik">Kritik</option>
+          <option value="Pertanyaan">Pertanyaan</option>
+        </select>
+      </div>
+
+      <div class="pesan-form-group">
+        <label class="pesan-form-label" for="pesan-subjek">Subjek / Topik</label>
+        <input type="text" id="pesan-subjek" class="pesan-form-input" placeholder="Misal: Kebersihan Lingkungan RT" required>
+      </div>
+
+      <div class="pesan-form-group">
+        <label class="pesan-form-label" for="pesan-isi">Isi Pesan / Aspirasi</label>
+        <textarea id="pesan-isi" class="pesan-form-textarea" placeholder="Tuliskan saran atau kritik Anda secara detail..." required></textarea>
+      </div>
+
+      <button type="submit" id="btn-submit-pesan" class="pesan-btn-submit">
+        <span id="btn-text-pesan">KIRIM PESAN</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+
+    </form>
+  </div>
+
+  <!-- LIST RIWAYAT PESAN TERKIRIM -->
+  <div class="pesan-history-section">
+    <div class="pesan-history-title">RIWAYAT PESAN TERKIRIM</div>
+    <div id="pesan-list-container">
+      <div class="pesan-empty-box">Memuat riwayat pesan...</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SCRIPT PENGIRIMAN, REALTIME USER-ONLY & FITUR EDIT/HAPUS -->
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onload="(async () => {
+  try {
+    const config = await import('./firebase-config.js');
+    const form = document.getElementById('form-saran-kritik');
+    const container = document.getElementById('pesan-list-container');
+    const btnSubmit = document.getElementById('btn-submit-pesan');
+    const btnCancel = document.getElementById('btn-cancel-edit-pesan');
+    const formTitle = document.getElementById('pesan-form-title');
+    const btnText = document.getElementById('btn-text-pesan');
+    const inputEditId = document.getElementById('pesan-edit-id');
+
+    if (!config.db || !config.auth) return;
+
+    let globalPesanUserMap = {};
+
+    function resetPesanForm() {
+      if (form) form.reset();
+      if (inputEditId) inputEditId.value = '';
+      if (formTitle) formTitle.innerText = 'Tulis Pesan Baru';
+      if (btnText) btnText.innerText = 'KIRIM PESAN';
+      if (btnCancel) btnCancel.classList.add('hidden');
+    }
+
+    if (btnCancel) {
+      btnCancel.addEventListener('click', resetPesanForm);
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const user = config.auth.currentUser;
+        if (!user) {
+          alert('Anda harus login terlebih dahulu.');
+          return;
+        }
+
+        const editId = inputEditId ? inputEditId.value : '';
+        const kategori = document.getElementById('pesan-kategori').value;
+        const subjek = document.getElementById('pesan-subjek').value.trim();
+        const isi = document.getElementById('pesan-isi').value.trim();
+
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnText.innerText = 'Memproses...';
+        }
+
+        try {
+          if (editId) {
+            await config.updateDoc(config.doc(config.db, 'pesan_saran', editId), {
+              kategori: kategori,
+              subjek: subjek,
+              isi: isi,
+              updatedAt: new Date()
+            });
+            alert('Pesan berhasil diperbarui!');
+          } else {
+            await config.addDoc(config.collection(config.db, 'pesan_saran'), {
+              uid: user.uid,
+              kategori: kategori,
+              subjek: subjek,
+              isi: isi,
+              status: 'Pending',
+              createdAt: new Date()
+            });
+            alert('Pesan saran & kritik Anda berhasil dikirim!');
+          }
+
+          resetPesanForm();
+        } catch (err) {
+          alert('Gagal memproses pesan: ' + err.message);
+        } finally {
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnText.innerText = editId ? 'SIMPAN PERUBAHAN' : 'KIRIM PESAN';
+          }
+        }
+      });
+    }
+
+    config.onAuthStateChanged(config.auth, (user) => {
+      if (!user) {
+        if (container) container.innerHTML = '<div class=&quot;pesan-empty-box&quot;>Silakan login untuk melihat riwayat pesan Anda.</div>';
+        return;
+      }
+
+      const pesanRef = config.collection(config.db, 'pesan_saran');
+      const q = config.query(
+        pesanRef, 
+        config.orderBy('createdAt', 'desc')
+      );
+
+      config.onSnapshot(q, (snapshot) => {
+        if (!container) return;
+        container.innerHTML = '';
+        globalPesanUserMap = {};
+
+        let myMessagesCount = 0;
+
+        snapshot.forEach((docSnap) => {
+          const item = docSnap.data();
+          if (item.uid !== user.uid) return;
+
+          myMessagesCount++;
+          const id = docSnap.id;
+          globalPesanUserMap[id] = item;
+
+          let tglFormatted = 'Baru saja';
+          if (item.createdAt) {
+            const d = item.createdAt.toDate ? item.createdAt.toDate() : new Date(item.createdAt);
+            tglFormatted = d.toLocaleDateString('id-ID', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric'
+            });
+          }
+
+          let badgeClass = 'badge-saran';
+          if (item.kategori === 'Kritik') badgeClass = 'badge-kritik';
+          else if (item.kategori === 'Pertanyaan') badgeClass = 'badge-pertanyaan';
+
+          const card = document.createElement('div');
+          card.className = 'pesan-item-card';
+
+          card.innerHTML = `
+            <div class=&quot;pesan-item-header&quot;>
+              <span class=&quot;pesan-badge-kategori ${badgeClass}&quot;>${item.kategori || 'Saran'}</span>
+              <span class=&quot;pesan-item-date&quot;>${tglFormatted}</span>
+            </div>
+            <div class=&quot;pesan-item-subjek&quot;>${item.subjek || 'Tanpa Subjek'}</div>
+            <div class=&quot;pesan-item-isi&quot;>${item.isi || '-'}</div>
+            <div class=&quot;pesan-action-row&quot;>
+              <button type=&quot;button&quot; class=&quot;pesan-btn-edit&quot; data-id=&quot;${id}&quot;>Edit</button>
+              <button type=&quot;button&quot; class=&quot;pesan-btn-delete&quot; data-id=&quot;${id}&quot;>Hapus</button>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+
+        if (myMessagesCount === 0) {
+          container.innerHTML = '<div class=&quot;pesan-empty-box&quot;>Belum ada pesan yang Anda kirim.</div>';
+        } else {
+          container.querySelectorAll('.pesan-btn-edit').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+              const id = e.target.getAttribute('data-id');
+              const data = globalPesanUserMap[id];
+              if (!data) return;
+
+              if (inputEditId) inputEditId.value = id;
+              document.getElementById('pesan-kategori').value = data.kategori || 'Saran';
+              document.getElementById('pesan-subjek').value = data.subjek || '';
+              document.getElementById('pesan-isi').value = data.isi || '';
+
+              if (formTitle) formTitle.innerText = 'Edit Pesan Terkirim';
+              if (btnText) btnText.innerText = 'SIMPAN PERUBAHAN';
+              if (btnCancel) btnCancel.classList.remove('hidden');
+
+              const mainContent = document.querySelector('.main-content');
+              if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+          });
+
+          container.querySelectorAll('.pesan-btn-delete').forEach((btn) => {
+            btn.addEventListener('click', async (e) => {
+              const id = e.target.getAttribute('data-id');
+              if (confirm('Apakah Anda yakin ingin menghapus pesan ini?')) {
+                try {
+                  await config.deleteDoc(config.doc(config.db, 'pesan_saran', id));
+                  alert('Pesan berhasil dihapus.');
+                  resetPesanForm();
+                } catch (err) {
+                  alert('Gagal menghapus pesan: ' + err.message);
+                }
+              }
+            });
+          });
+        }
+      });
+    });
+
+  } catch(err) {
+    console.error('Gagal memuat modul pesan:', err);
+  }
+})()" style="display:none;" />

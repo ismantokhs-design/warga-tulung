@@ -1,0 +1,624 @@
+<style>
+  .event-container {
+    padding: 16px;
+    background-color: #F0FDF4;
+    min-height: 100vh;
+    animation: fadeInEvent 0.25s ease-out;
+  }
+
+  @keyframes fadeInEvent {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Header Bar */
+  .event-header-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .btn-back-more {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    color: #0A3966;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .btn-back-more:active {
+    transform: scale(0.95);
+    background-color: #F8FAFC;
+  }
+
+  .btn-tambah-action {
+    background-color: #0A3966;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(10, 57, 102, 0.2);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .btn-tambah-action.mode-info {
+    background-color: #059669;
+    box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+  }
+
+  .btn-tambah-action:active {
+    transform: scale(0.96);
+  }
+
+  /* TAB NAVIGATION STYLES */
+  .tab-container {
+    display: flex;
+    background: #E2E8F0;
+    border-radius: 16px;
+    padding: 4px;
+    margin-bottom: 16px;
+    gap: 4px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+  }
+
+  .tab-btn.active {
+    background: #FFFFFF;
+    color: #0A3966;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  }
+
+  /* FORMAT SPESIFIK TAB 1 (INFO / PENGUMUMAN) */
+  .info-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 2px;
+  }
+
+  .info-section-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+  }
+
+  .info-filter-select {
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #334155;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .info-empty-card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    padding: 22px 20px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  }
+
+  .empty-text-italic {
+    color: #94A3B8;
+    font-style: italic;
+    font-size: 13px;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  /* List & Content Styles Base */
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .event-card-item {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    border: 1px solid #E2E8F0;
+  }
+
+  .event-card-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .event-checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid #CBD5E1;
+    cursor: pointer;
+    accent-color: #0A3966;
+  }
+
+  .event-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .event-meta-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .event-title-text {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .event-subtitle-text {
+    font-size: 12px;
+    color: #64748B;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .event-status-label {
+    font-size: 11px;
+    color: #94A3B8;
+    font-weight: 500;
+  }
+
+  /* Toggle Switch */
+  .switch-toggle {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+
+  .switch-toggle input { opacity: 0; width: 0; height: 0; }
+
+  .slider-toggle {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #E2E8F0;
+    transition: 0.3s;
+    border-radius: 30px;
+  }
+
+  .slider-toggle:before {
+    position: absolute;
+    content: "";
+    height: 20px; width: 20px;
+    left: 3px; bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  input:checked + .slider-toggle { background-color: #059669; }
+  input:checked + .slider-toggle:before { transform: translateX(22px); }
+
+  /* Pagination */
+  .pagination-container {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    border: 1px solid #E2E8F0;
+  }
+
+  .btn-page-nav {
+    width: 36px; height: 36px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0A3966;
+    cursor: pointer;
+  }
+
+  .page-number-badge {
+    background-color: #DCFCE7;
+    color: #059669;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 16px;
+    border-radius: 12px;
+  }
+
+  /* Modal Base */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 16px;
+  }
+
+  .modal-overlay.active { display: flex; animation: fadeInModal 0.2s ease-out; }
+
+  .modal-box {
+    background: #FFFFFF;
+    border-radius: 24px;
+    width: 100%; max-width: 380px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    max-height: 90vh; overflow-y: auto;
+  }
+
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-title-wrap { display: flex; align-items: center; gap: 8px; }
+  .modal-title { font-size: 15px; font-weight: 800; color: #0F172A; margin: 0; }
+
+  .btn-close-modal {
+    width: 28px; height: 28px;
+    border-radius: 50%; background-color: #F1F5F9;
+    border: none; color: #64748B; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-weight: bold;
+  }
+
+  .form-group { margin-bottom: 14px; }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-label { display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 5px; }
+
+  .input-field, .select-field {
+    width: 100%; padding: 10px 12px;
+    border-radius: 12px; border: 1px solid #E2E8F0;
+    background-color: #F8FAFC; font-size: 12px; color: #0F172A;
+    outline: none; box-sizing: border-box;
+  }
+
+  textarea.input-field { resize: none; height: 80px; }
+
+  .image-preview-box {
+    width: 100%; aspect-ratio: 2 / 1;
+    border: 1.5px dashed #CBD5E1; border-radius: 16px;
+    background-color: #F8FAFC; display: flex;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; color: #94A3B8; font-size: 11px; font-weight: 500;
+    overflow: hidden;
+  }
+
+  .image-preview-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
+
+  .upload-file-row { display: flex; gap: 10px; align-items: center; }
+  .upload-filename-display {
+    flex: 1; padding: 10px 14px; border-radius: 12px;
+    border: 1px solid #E2E8F0; background-color: #F8FAFC;
+    font-size: 11px; color: #94A3B8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .btn-choose-file {
+    background-color: #0A3966; color: #FFFFFF; border: none;
+    padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 700; cursor: pointer;
+  }
+
+  .btn-submit-event {
+    width: 100%; background-color: #0A3966; color: #FFFFFF;
+    border: none; padding: 12px; border-radius: 14px;
+    font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 6px;
+  }
+
+  .btn-publikasikan-info {
+    width: 100%; background-color: #059669; color: #FFFFFF;
+    border: none; padding: 12px; border-radius: 14px;
+    font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+</style>
+
+<div class="event-container" id="event-container-root">
+  
+  <!-- HEADER ACTION BAR -->
+  <div class="event-header-action">
+    <button type="button" class="btn-back-more" id="btn-back-to-more">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+
+    <!-- TOMBOL DUA FUNGSI (DINAMIS SESUAI TAB AKTIF) -->
+    <button type="button" class="btn-tambah-action mode-info" id="btn-tambah-dinamis">+ Tambah Informasi</button>
+  </div>
+
+  <!-- TAB NAVIGATION (INFO & EVENT) -->
+  <div class="tab-container">
+    <button type="button" class="tab-btn active" id="tab-btn-info" onclick="switchTab('info')">Info</button>
+    <button type="button" class="tab-btn" id="tab-btn-event" onclick="switchTab('event')">Event</button>
+  </div>
+
+  <!-- KONTEN TAB 1: INFO (SAMA PERSIS DENGAN GAMBAR RUJUKAN) -->
+  <div class="tab-content active" id="tab-content-info">
+    
+    <!-- BARIS JUDUL & FILTER DROPDOWN -->
+    <div class="info-header-row">
+      <h3 class="info-section-title">Daftar Pengumuman Aktif</h3>
+      <select class="info-filter-select" id="filter-wilayah-info">
+        <option value="Semua Wilayah">Semua Wilayah</option>
+        <option value="RT 01">RT 01</option>
+        <option value="RT 02">RT 02</option>
+        <option value="RT 03">RT 03</option>
+        <option value="RW 01">RW 01</option>
+      </select>
+    </div>
+
+    <!-- KARTU DAFTAR PENGUMUMAN / EMPTY STATE -->
+    <div id="container-info-list">
+      <div class="info-empty-card">
+        <p class="empty-text-italic">Belum ada pengumuman.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- KONTEN TAB 2: EVENT -->
+  <div class="tab-content" id="tab-content-event">
+    <div class="event-list" id="container-event-list">
+      <!-- Item Kegiatan / Event dimuat di sini oleh JS -->
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination-container">
+    <button type="button" class="btn-page-nav">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <span class="page-number-badge">1</span>
+    <button type="button" class="btn-page-nav">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+  </div>
+
+</div>
+
+<!-- MODAL 1: BUAT INFORMASI BARU -->
+<div class="modal-overlay" id="modal-tambah-informasi">
+  <div class="modal-box">
+    
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        <h3 class="modal-title">Buat Informasi Baru</h3>
+      </div>
+      <button type="button" class="btn-close-modal" id="btn-close-modal-info">&times;</button>
+    </div>
+
+    <form id="form-tambah-informasi">
+      <div class="form-group">
+        <label class="form-label">Judul Pengumuman</label>
+        <input type="text" class="input-field" id="info-judul" placeholder="Misal: Senam Sehat" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Target Wilayah</label>
+        <select class="select-field" id="info-wilayah">
+          <option value="Semua Wilayah (RT / RW)">Semua Wilayah (RT / RW)</option>
+          <option value="RT 01">RT 01</option>
+          <option value="RT 02">RT 02</option>
+          <option value="RT 03">RT 03</option>
+          <option value="RW 01">RW 01</option>
+        </select>
+      </div>
+
+      <div class="form-group form-row-2">
+        <div>
+          <label class="form-label">Kategori</label>
+          <select class="select-field" id="info-kategori">
+            <option value="Kerja Bakti">Kerja Bakti</option>
+            <option value="Pengumuman">Pengumuman</option>
+            <option value="Kegiatan Warga">Kegiatan Warga</option>
+            <option value="Keuangan / Kas">Keuangan / Kas</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Tgl & Waktu</label>
+          <input type="datetime-local" class="input-field" id="info-tgl-waktu" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Isi Pengumuman</label>
+        <textarea class="input-field" id="info-isi" placeholder="Tuliskan detail info..." required></textarea>
+      </div>
+
+      <button type="submit" class="btn-publikasikan-info">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        Publikasikan
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<!-- MODAL 2: TAMBAH EVENT -->
+<div class="modal-overlay" id="modal-tambah-event">
+  <div class="modal-box">
+    
+    <div class="modal-header">
+      <h3 class="modal-title">Tambah Event</h3>
+      <button type="button" class="btn-close-modal" id="btn-close-modal-event">&times;</button>
+    </div>
+
+    <form id="form-tambah-event">
+      <div class="form-group">
+        <label class="form-label">Pratinjau Gambar (2:1)</label>
+        <div class="image-preview-box" id="preview-box">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <span id="preview-text">Pratinjau Gambar (2:1)</span>
+          <img id="img-preview" alt="Pratinjau">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nama Event</label>
+        <input type="text" class="input-field" id="event-nama" placeholder="Misal: Event Heboh / Kerja Bakti" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Deskripsi Event</label>
+        <textarea class="input-field" id="event-deskripsi" placeholder="Ketik keterangan atau laporan singkat kegiatan..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Upload Gambar</label>
+        <div class="upload-file-row">
+          <div class="upload-filename-display" id="file-name-display">Tidak ada yang dipilih</div>
+          <button type="button" class="btn-choose-file" id="btn-trigger-file">Pilih File</button>
+          <input type="file" id="input-file-gambar" accept="image/*" style="display: none;">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit-event">Simpan Event</button>
+    </form>
+
+  </div>
+</div>
+
+<!-- INLINE SCRIPT LOGIKA TAB & MODAL -->
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onload="(function(){
+  let currentTab = 'info';
+
+  window.switchTab = function(tabName) {
+    currentTab = tabName;
+    const btnInfo = document.getElementById('tab-btn-info');
+    const btnEvent = document.getElementById('tab-btn-event');
+    const contentInfo = document.getElementById('tab-content-info');
+    const contentEvent = document.getElementById('tab-content-event');
+    const btnAction = document.getElementById('btn-tambah-dinamis');
+
+    if (tabName === 'info') {
+      btnInfo.classList.add('active');
+      btnEvent.classList.remove('active');
+      contentInfo.classList.add('active');
+      contentEvent.classList.remove('active');
+
+      btnAction.innerText = '+ Tambah Informasi';
+      btnAction.className = 'btn-tambah-action mode-info';
+    } else {
+      btnEvent.classList.add('active');
+      btnInfo.classList.remove('active');
+      contentEvent.classList.add('active');
+      contentInfo.classList.remove('active');
+
+      btnAction.innerText = 'Tambah Event';
+      btnAction.className = 'btn-tambah-action';
+    }
+  };
+
+  // Click handler tombol Tambah Dinamis (Sesuai Tab)
+  const btnAction = document.getElementById('btn-tambah-dinamis');
+  const modalInfo = document.getElementById('modal-tambah-informasi');
+  const modalEvent = document.getElementById('modal-tambah-event');
+
+  if (btnAction) {
+    btnAction.onclick = function() {
+      if (currentTab === 'info') {
+        if (modalInfo) modalInfo.classList.add('active');
+      } else {
+        if (modalEvent) modalEvent.classList.add('active');
+      }
+    };
+  }
+
+  // Close modals
+  const closeInfo = document.getElementById('btn-close-modal-info');
+  const closeEvent = document.getElementById('btn-close-modal-event');
+  if (closeInfo && modalInfo) closeInfo.onclick = () => modalInfo.classList.remove('active');
+  if (closeEvent && modalEvent) closeEvent.onclick = () => modalEvent.classList.remove('active');
+
+  // Navigasi Kembali
+  const fungsiMuatMore = async function() {
+    const parentContainer = document.getElementById('more') || document.getElementById('event-container-root')?.parentElement;
+    if (!parentContainer) return;
+    try {
+      const res = await fetch('./pages/more.html');
+      if (res.ok) parentContainer.innerHTML = await res.text();
+    } catch (err) { console.error('Gagal:', err); }
+  };
+
+  const btnBack = document.getElementById('btn-back-to-more');
+  if (btnBack) btnBack.onclick = fungsiMuatMore;
+
+  document.querySelectorAll('.nav-item').forEach(item => {
+    if (item.innerText.includes('Lainnya')) {
+      item.onclick = function() {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        fungsiMuatMore();
+      };
+    }
+  });
+})()" style="display:none;" />

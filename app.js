@@ -12,7 +12,10 @@ import {
   updateDoc,
   deleteDoc,
   collection, 
-  onSnapshot 
+  onSnapshot,
+  query,
+  orderBy,
+  limit
 } from "./firebase-config.js";
 
 import { 
@@ -23,6 +26,8 @@ import {
 // PEMETAAN FILE HTML DALAM FOLDER PAGES
 const pageFiles = {
   'profil': 'profil.html',
+  'event': 'event.html',
+  'pesan': 'pesan.html', // <-- DITAMBAHKAN AGAR HALAMAN PESAN DAPAT DIMUAT DINAMIS
   'more': 'more.html',
   'admin-panel': 'kependudukan.html',
   'keuangan': 'keuangan.html',
@@ -195,7 +200,6 @@ function initLoginEvents() {
 
 // 6. INISIALISASI EVENT DYNAMIC PAGES
 function initDynamicFormEvents(pageId) {
-  // Buka Halaman Profil Readonly
   if (pageId === 'profil') {
     displayReadonlyProfilWilayah();
   }
@@ -308,7 +312,6 @@ function initDynamicFormEvents(pageId) {
     }
   }
 
-  // Modul Formulir Profil Wilayah (Entri / Edit)
   if (pageId === 'profil-wilayah') {
     initProfilWilayahModule();
   }
@@ -346,20 +349,93 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// 9. LISTEN AUTH STATUS
+// 9. LISTEN INFORMASI TERBARU BERANDA (REALTIME FIRESTORE)
+function listenInformasiTerbaruBeranda() {
+  const container = document.getElementById("beranda-info-card-container");
+  if (!container) return;
+
+  const infoRef = collection(db, "informasi");
+  const q = query(infoRef, orderBy("createdAt", "desc"), limit(1));
+
+  onSnapshot(q, (snapshot) => {
+    if (snapshot.empty) {
+      container.innerHTML = `
+        <p style="color: #94A3B8; font-style: italic; font-size: 13px; margin: 0;">
+          Belum ada informasi wilayah terbaru.
+        </p>
+      `;
+      return;
+    }
+
+    snapshot.forEach((docSnap) => {
+      const item = docSnap.data();
+
+      let tglText = "-";
+      if (item.tglWaktu) {
+        const d = new Date(item.tglWaktu);
+        tglText = d.toLocaleString("id-ID", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        }) + " WIB";
+      }
+
+      container.innerHTML = `
+        <div class="info-badges-row">
+          <span class="badge-category">${item.kategori || 'Pengumuman'}</span>
+          <span class="badge-wilayah">${item.targetWilayah || 'Semua Wilayah'}</span>
+          
+          <div class="info-time-text">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>${tglText}</span>
+          </div>
+        </div>
+
+        <h3 class="info-item-title">${item.judul || 'Tanpa Judul'}</h3>
+        <p class="info-item-desc">${item.isi || '-'}</p>
+      `;
+    });
+  });
+}
+
+// 10. LISTEN AUTH STATUS
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     document.getElementById("login-overlay").style.display = "none";
     document.getElementById("app-container").style.display = "block";
+
+    // JALANKAN LISTENER PAPAN INFORMASI BERANDA
+    listenInformasiTerbaruBeranda();
 
     const userDoc = await getDoc(doc(db, "users", user.uid));
     if (userDoc.exists()) {
       const userData = userDoc.data();
       const nama = userData.nama || "Pengguna";
       document.getElementById("user-name").innerText = "Selamat datang, " + nama;
-      document.getElementById("user-location").innerText = userData.rt_rw || "RT 03 / RW 05";
 
-      // KELOLA INISIAL AVATAR DAN KETERANGAN DROPDOWN
+      try {
+        const wilayahDoc = await getDoc(doc(db, "profil", "wilayah"));
+        if (wilayahDoc.exists()) {
+          const dataW = wilayahDoc.data();
+          const desaName = dataW.desa ? `Desa ${dataW.desa}` : "";
+          const userRtRw = userData.rt_rw || "";
+          
+          const lokasiLengkap = [userRtRw, desaName].filter(Boolean).join(", ");
+          document.getElementById("user-location").innerText = lokasiLengkap || (userData.rt_rw || "RT 03 / RW 05");
+        } else {
+          document.getElementById("user-location").innerText = userData.rt_rw || "RT 03 / RW 05";
+        }
+      } catch (err) {
+        console.error("Gagal memuat profil wilayah untuk header:", err);
+        document.getElementById("user-location").innerText = userData.rt_rw || "RT 03 / RW 05";
+      }
+
       const initials = nama.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
       if (document.getElementById("user-avatar-initials")) {
         document.getElementById("user-avatar-initials").innerText = initials || "PE";
@@ -377,10 +453,8 @@ onAuthStateChanged(auth, async (user) => {
       if (navMoreLink) {
         if (userRole === "admin" || userRole === "pengurus") {
           navMoreLink.classList.remove("hidden");
-          navMoreLink.style.display = "flex";
         } else {
           navMoreLink.classList.add("hidden");
-          navMoreLink.style.display = "none";
         }
       }
     }
@@ -392,7 +466,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// 10. LOGOUT
+// 11. LOGOUT
 document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", async (e) => {
     if (e.target && (e.target.id === "btn-logout" || e.target.closest("#btn-logout"))) {
@@ -402,7 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// 11. LOAD USER KEPENDUDUKAN
+// 12. LOAD USER KEPENDUDUKAN
 function loadUsersTable() {
   const usersRef = collection(db, "users");
   onSnapshot(usersRef, (snapshot) => {
@@ -430,7 +504,7 @@ function loadUsersTable() {
   });
 }
 
-// 12. LOAD USER SETTING USER
+// 13. LOAD USER SETTING USER
 function loadSettingUsersRealtime() {
   const usersRef = collection(db, "users");
   onSnapshot(usersRef, (snapshot) => {
@@ -544,7 +618,7 @@ function resetUserForm() {
   if (btnCancel) btnCancel.classList.add("hidden");
 }
 
-// 13. STATISTIK
+// 14. STATISTIK
 const statRef = doc(db, "kependudukan", "statistik");
 onSnapshot(statRef, (docSnap) => {
   if (docSnap.exists()) {

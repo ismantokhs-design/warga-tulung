@@ -9,7 +9,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Header Section */
   .more-header {
     margin-bottom: 20px;
     padding-left: 2px;
@@ -30,7 +29,6 @@
     font-weight: 500;
   }
 
-  /* Section Wrapper */
   .more-section {
     margin-bottom: 22px;
   }
@@ -45,7 +43,6 @@
     text-transform: uppercase;
   }
 
-  /* Menu Group Card */
   .more-menu-group {
     background: #FFFFFF;
     border-radius: 18px;
@@ -54,7 +51,6 @@
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
   }
 
-  /* Menu Item Link */
   .more-menu-item {
     display: flex;
     align-items: center;
@@ -88,7 +84,6 @@
     gap: 14px;
   }
 
-  /* Icon Box Styling */
   .more-icon-box {
     width: 38px;
     height: 38px;
@@ -107,7 +102,6 @@
     color: #FFFFFF;
   }
 
-  /* Menu Text & Description */
   .more-menu-text-wrap {
     display: flex;
     flex-direction: column;
@@ -127,7 +121,6 @@
     font-weight: 400;
   }
 
-  /* Arrow Right Icon */
   .more-arrow-icon {
     color: #CBD5E1;
     transition: transform 0.2s ease, color 0.2s ease;
@@ -138,7 +131,6 @@
     transform: translateX(3px);
   }
 
-  /* Footer App Info */
   .more-app-version {
     text-align: center;
     font-size: 11px;
@@ -150,17 +142,46 @@
 
 <div class="more-container">
 
-  <!-- HEADER JUDUL HALAMAN -->
   <div class="more-header">
     <h2 class="brand-title">Lainnya</h2>
     <p class="page-subtitle">Pengaturan & Fitur Tambahan Aplikasi</p>
   </div>
 
-  <!-- SEKSI LAYANAN & ADMINISTRASI -->
   <div class="more-section">
     <div class="more-section-label">Layanan & Administrasi</div>
     <div class="more-menu-group">
       
+      <!-- MENU ACARA & KEGIATAN -->
+      <a href="javascript:void(0)" class="more-menu-item" onclick="(async () => {
+        const target = document.getElementById('more') || document.querySelector('.more-container')?.parentElement;
+        if (!target) return;
+        try {
+          const res = await fetch('./pages/acara-kegiatan.html');
+          if (res.ok) {
+            target.innerHTML = await res.text();
+            const mod = await import('../modules/acara-kegiatan.js');
+            if (mod && mod.initAcaraModule) mod.initAcaraModule();
+          }
+        } catch(err) { console.error('Gagal:', err); }
+      })()">
+        <div class="more-menu-left">
+          <div class="more-icon-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div class="more-menu-text-wrap">
+            <span class="more-menu-title">Acara & Kegiatan</span>
+            <span class="more-menu-desc">Kelola agenda kegiatan & event warga</span>
+          </div>
+        </div>
+        <svg class="more-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </a>
+
+      <!-- SURAT PENGANTAR -->
       <a href="javascript:void(0)" class="more-menu-item" onclick="alert('Fitur Surat Pengantar akan segera hadir!')">
         <div class="more-menu-left">
           <div class="more-icon-box">
@@ -176,10 +197,11 @@
             <span class="more-menu-desc">Permohonan dokumen RT / RW</span>
           </div>
         </div>
-        <svg class="more-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <svg class="more-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </a>
 
-      <a href="javascript:void(0)" class="more-menu-item" onclick="switchPage('keuangan')">
+      <!-- IURAN & KAS WARGA -->
+      <a href="javascript:void(0)" class="more-menu-item" onclick="alert('Fitur Iuran & Kas Warga')">
         <div class="more-menu-left">
           <div class="more-icon-box">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -198,12 +220,11 @@
     </div>
   </div>
 
-  <!-- SEKSI PENGATURAN & BANTUAN -->
   <div class="more-section">
     <div class="more-section-label">Pengaturan & Informasi</div>
     <div class="more-menu-group">
 
-      <a href="javascript:void(0)" class="more-menu-item" onclick="switchPage('setting-user')">
+      <a href="javascript:void(0)" class="more-menu-item" onclick="alert('Fitur Keamanan Akun')">
         <div class="more-menu-left">
           <div class="more-icon-box">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -218,7 +239,7 @@
         <svg class="more-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </a>
 
-      <a href="javascript:void(0)" class="more-menu-item" onclick="switchPage('profil-wilayah')">
+      <a href="javascript:void(0)" class="more-menu-item" onclick="alert('Fitur Profil Wilayah')">
         <div class="more-menu-left">
           <div class="more-icon-box">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

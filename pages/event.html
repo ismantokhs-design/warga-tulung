@@ -1,0 +1,238 @@
+<style>
+  .event-page-container {
+    padding: 0 0 16px 0;
+    animation: fadeInPage 0.2s ease-out;
+  }
+
+  @keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* TOPBAR CLEAN & PUTIH MINIMALIS */
+  .event-topbar-clean {
+    background: #F8FAFC;
+    padding: 8px 0 12px 0;
+    margin-bottom: 4px;
+  }
+
+  .event-topbar-title {
+    color: #00796B;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin-bottom: 2px;
+  }
+
+  .event-topbar-subtitle {
+    color: #64748B;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  /* Filter Periode Dropdown Bar */
+  .event-filter-bar {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    margin-bottom: 14px;
+  }
+
+  .event-filter-icon {
+    color: #059669;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .event-filter-select {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+  }
+
+  /* List Event Grid / Cards */
+  .event-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .event-display-card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: transform 0.15s ease;
+  }
+
+  .event-card-banner {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+    background-color: #E2E8F0;
+  }
+
+  .event-card-body {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .event-card-date {
+    font-size: 10.5px;
+    color: #94A3B8;
+    font-weight: 500;
+  }
+
+  .event-card-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  .event-card-desc {
+    font-size: 12px;
+    color: #64748B;
+    line-height: 1.35;
+    margin-top: 2px;
+    margin-bottom: 6px;
+  }
+
+  .event-read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #0A3966;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .event-read-more:hover {
+    color: #059669;
+  }
+
+  .event-empty-box {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 20px 14px;
+    text-align: center;
+    color: #94A3B8;
+    font-size: 12px;
+    font-style: italic;
+    border: 1px solid #E2E8F0;
+  }
+</style>
+
+<div class="event-page-container">
+
+  <!-- TOPBAR CLEAN & PUTIH MINIMALIS -->
+  <div class="event-topbar-clean">
+    <h2 class="event-topbar-title">Event Terbaru</h2>
+    <p class="event-topbar-subtitle">Dokumentasi dan informasi kegiatan warga RT</p>
+  </div>
+
+  <!-- FILTER PERIODE -->
+  <div class="event-filter-bar">
+    <div class="event-filter-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+    </div>
+    <select class="event-filter-select" id="filter-periode-event">
+      <option value="semua">Semua Periode (Bulan & Tahun)</option>
+      <option value="2026-10">Oktober 2026</option>
+      <option value="2026-11">November 2026</option>
+      <option value="2026-12">Desember 2026</option>
+    </select>
+  </div>
+
+  <!-- CONTAINER REALTIME DAFTAR EVENT -->
+  <div class="event-cards-grid" id="public-events-list">
+    <div class="event-empty-box">Memuat agenda kegiatan...</div>
+  </div>
+
+</div>
+
+<!-- SCRIPT AMAN DENGAN DELEGATION ONLOAD -->
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onload="(async () => {
+  try {
+    const config = await import('./firebase-config.js');
+    const container = document.getElementById('public-events-list');
+    if (!container || !config.db) return;
+
+    const eventsRef = config.collection(config.db, 'events');
+    const q = config.query(eventsRef, config.orderBy('createdAt', 'desc'));
+
+    config.onSnapshot(q, (snapshot) => {
+      container.innerHTML = '';
+
+      if (snapshot.empty) {
+        container.innerHTML = '<div class=&quot;event-empty-box&quot;>Belum ada kegiatan/event warga.</div>';
+        return;
+      }
+
+      snapshot.forEach((docSnap) => {
+        const item = docSnap.data();
+        if (item.aktif === false) return;
+
+        let tglFormatted = 'Tanggal tidak ditentukan';
+        if (item.tanggal) {
+          const d = new Date(item.tanggal);
+          tglFormatted = d.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          });
+        }
+
+        const card = document.createElement('div');
+        card.className = 'event-display-card';
+
+        const defaultImg = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=600';
+
+        card.innerHTML = `
+          <img src=&quot;${item.imageUrl || defaultImg}&quot; alt=&quot;${item.judul || 'Event'}&quot; class=&quot;event-card-banner&quot;>
+          <div class=&quot;event-card-body&quot;>
+            <span class=&quot;event-card-date&quot;>${tglFormatted}</span>
+            <h3 class=&quot;event-card-title&quot;>${item.judul || 'Tanpa Judul'}</h3>
+            <p class=&quot;event-card-desc&quot;>${item.deskripsi || '-'}</p>
+            <a href=&quot;javascript:void(0)&quot; class=&quot;event-read-more&quot;>
+              Baca selengkapnya 
+              <svg width=&quot;13&quot; height=&quot;13&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot;><polyline points=&quot;9 18 15 12 9 6&quot;></polyline></svg>
+            </a>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      if (container.children.length === 0) {
+        container.innerHTML = '<div class=&quot;event-empty-box&quot;>Belum ada event aktif.</div>';
+      }
+    });
+  } catch(err) {
+    console.error('Gagal memuat modul event:', err);
+  }
+})()" style="display:none;" />

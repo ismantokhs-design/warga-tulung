@@ -1,37 +1,37 @@
 <style>
   .profil-view-container {
-    padding-bottom: 24px;
-    animation: fadeInProfil 0.25s ease-out;
+    padding-bottom: 16px;
+    animation: fadeInProfil 0.2s ease-out;
   }
 
   @keyframes fadeInProfil {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Header Title */
+  /* Header Title Minimalis */
   .profil-header-title {
     color: #00796B;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800;
     margin: 0;
   }
 
   .profil-header-subtitle {
     color: #64748B;
-    font-size: 12px;
-    margin-top: 3px;
-    margin-bottom: 18px;
+    font-size: 11px;
+    margin-top: 2px;
+    margin-bottom: 14px;
   }
 
-  /* Banner Card Profil Wilayah */
+  /* Banner Card Profil Wilayah Compact */
   .wilayah-banner-card {
     background: linear-gradient(135deg, #00796B 0%, #004D40 100%);
-    border-radius: 20px;
-    padding: 20px;
+    border-radius: 16px;
+    padding: 14px;
     color: #FFFFFF;
-    box-shadow: 0 8px 20px rgba(0, 121, 107, 0.2);
-    margin-bottom: 18px;
+    box-shadow: 0 6px 16px rgba(0, 121, 107, 0.18);
+    margin-bottom: 14px;
     position: relative;
     overflow: hidden;
   }
@@ -39,10 +39,10 @@
   .wilayah-banner-card::after {
     content: '';
     position: absolute;
-    right: -20px;
-    bottom: -20px;
-    width: 120px;
-    height: 120px;
+    right: -15px;
+    bottom: -15px;
+    width: 90px;
+    height: 90px;
     background: rgba(255, 255, 255, 0.06);
     border-radius: 50%;
     pointer-events: none;
@@ -51,27 +51,27 @@
   .wilayah-badge-tag {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(4px);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 16px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .wilayah-main-name {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 4px;
+    line-height: 1.25;
+    margin-bottom: 2px;
   }
 
   .wilayah-sub-location {
-    font-size: 13px;
+    font-size: 11.5px;
     opacity: 0.9;
     font-weight: 500;
   }
@@ -79,123 +79,120 @@
   /* Info Card Box */
   .info-card {
     background: #FFFFFF;
-    border-radius: 18px;
+    border-radius: 16px;
     border: 1px solid #E2E8F0;
-    padding: 18px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
-    margin-bottom: 16px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    margin-bottom: 12px;
   }
 
   .info-card-title {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     color: #94A3B8;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.6px;
     text-transform: uppercase;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
 
   /* Grid Data List */
   .info-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 8px;
   }
 
   .info-item {
     background-color: #F8FAFC;
-    padding: 10px 12px;
-    border-radius: 12px;
+    padding: 8px 10px;
+    border-radius: 10px;
     border: 1px solid #F1F5F9;
   }
 
   .info-label {
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 700;
     color: #64748B;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
     text-transform: uppercase;
     margin-bottom: 2px;
   }
 
   .info-value {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: #0F172A;
     word-break: break-word;
   }
 
   .info-description-text {
-    font-size: 13px;
+    font-size: 12px;
     color: #334155;
-    line-height: 1.6;
+    line-height: 1.5;
     white-space: pre-line;
   }
 
-  /* =========================================
-     STYLE DIAGRAM STRUKTUR ORGANISASI
-     ========================================= */
+  /* DIAGRAM STRUKTUR ORGANISASI COMPACT */
   .org-tree-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding-top: 4px;
+    padding-top: 2px;
   }
 
   /* Node Utama (Dukuh) */
   .org-node-dukuh {
     background: linear-gradient(135deg, #00796B, #004D40);
     color: #FFFFFF;
-    padding: 12px 18px;
-    border-radius: 14px;
+    padding: 10px 14px;
+    border-radius: 12px;
     text-align: center;
-    min-width: 180px;
-    box-shadow: 0 4px 12px rgba(0, 121, 107, 0.2);
+    min-width: 160px;
+    box-shadow: 0 3px 10px rgba(0, 121, 107, 0.18);
     position: relative;
   }
 
   .org-node-dukuh .node-role {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
     color: #A7F3D0;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.6px;
     text-transform: uppercase;
   }
 
   .org-node-dukuh .node-name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 800;
     margin-top: 2px;
   }
 
   .org-node-dukuh .node-contact {
-    font-size: 11px;
+    font-size: 10px;
     opacity: 0.9;
-    margin-top: 2px;
+    margin-top: 1px;
   }
 
-  /* Garis Penghubung Vertikal dari Dukuh ke Cabang RT */
+  /* Garis Penghubung Vertikal */
   .org-line-vertical {
     width: 2px;
-    height: 20px;
+    height: 14px;
     background-color: #00796B;
   }
 
   /* Container Baris RT */
   .org-rt-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
     width: 100%;
     position: relative;
-    padding-top: 12px;
+    padding-top: 10px;
   }
 
-  /* Garis Atas Horizontal untuk menghubungkan RT */
   .org-rt-grid::before {
     content: '';
     position: absolute;
@@ -209,37 +206,37 @@
   /* Card Node RT */
   .org-node-rt {
     background: #F8FAFC;
-    border: 1.5px solid #E2E8F0;
-    border-radius: 14px;
-    padding: 12px;
+    border: 1.2px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 10px;
     position: relative;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
   }
 
   .org-node-rt::before {
     content: '';
     position: absolute;
-    top: -12px;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
-    height: 12px;
+    height: 10px;
     background-color: #CBD5E1;
   }
 
   .rt-badge-header {
     background: #E8F5E9;
     color: #00796B;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 6px;
+    padding: 2px 6px;
+    border-radius: 5px;
     display: inline-block;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .rt-person-row {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .rt-person-row:last-child {
@@ -247,14 +244,14 @@
   }
 
   .rt-person-label {
-    font-size: 9px;
+    font-size: 8.5px;
     font-weight: 700;
     color: #64748B;
     text-transform: uppercase;
   }
 
   .rt-person-val {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     color: #0F172A;
   }
@@ -269,7 +266,7 @@
   <!-- BANNER PROFIL DUKUH -->
   <div class="wilayah-banner-card">
     <div class="wilayah-badge-tag">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
         <circle cx="12" cy="10" r="3"></circle>
       </svg>
@@ -282,7 +279,7 @@
   <!-- KARTU STRUKTUR ORGANISASI (DIAGRAM TREE) -->
   <div class="info-card">
     <div class="info-card-title">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
         <circle cx="9" cy="7" r="4"></circle>
         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -304,8 +301,7 @@
 
       <!-- GRID PENGURUS RT -->
       <div class="org-rt-grid" id="container-rt-tree">
-        <!-- Rincian RT akan dipopulasikan lewat JS -->
-        <div style="font-size: 12px; color: #94A3B8; text-align: center; grid-column: 1 / -1;">
+        <div style="font-size: 11px; color: #94A3B8; text-align: center; grid-column: 1 / -1;">
           Memuat struktur RT...
         </div>
       </div>
@@ -315,14 +311,14 @@
   <!-- KARTU RINCIAN ADMINISTRASI -->
   <div class="info-card">
     <div class="info-card-title">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
         <polyline points="14 2 14 8 20 8"></polyline>
       </svg>
       Detail Wilayah Administrasi
     </div>
 
-    <div class="info-grid-2" style="margin-bottom: 12px;">
+    <div class="info-grid-2" style="margin-bottom: 8px;">
       <div class="info-item">
         <div class="info-label">Pedukuhan</div>
         <div class="info-value" id="val-pedukuhan">-</div>
@@ -333,7 +329,7 @@
       </div>
     </div>
 
-    <div class="info-grid-2" style="margin-bottom: 12px;">
+    <div class="info-grid-2" style="margin-bottom: 8px;">
       <div class="info-item">
         <div class="info-label">Kecamatan</div>
         <div class="info-value" id="val-kecamatan">-</div>
@@ -359,7 +355,7 @@
   <!-- KARTU DESKRIPSI TENTANG WILAYAH -->
   <div class="info-card">
     <div class="info-card-title">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="12" y1="16" x2="12" y2="12"></line>
         <line x1="12" y1="8" x2="12.01" y2="8"></line>
