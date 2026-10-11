@@ -1,9 +1,9 @@
 {
-  "id": "/warga-tulung/",
-  "scope": "/warga-tulung/",
+  "id": "warga-tulung-app",
+  "scope": "./",
   "name": "Warga Tulung",
   "short_name": "Tulung",
-  "start_url": "/warga-tulung/index.html?v=1",
+  "start_url": "./index.html?v=1",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0d6efd",

@@ -1,14 +1,12 @@
-// Service Worker Version & Cache Name unik untuk Warga Tulung
 const CACHE_NAME = 'warga-tulung-v1';
 const ASSETS_TO_CACHE = [
-  '/warga-tulung/',
-  '/warga-tulung/index.html',
-  '/warga-tulung/manifest.json',
-  '/warga-tulung/icon.png',
-  '/warga-tulung/icon2.png'
+  './',
+  './index.html?v=1',
+  './manifest.json',
+  './icon.png?v=1',
+  './icon2.png?v=1'
 ];
 
-// 1. Proses Install: Simpan file utama ke Cache
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
@@ -18,7 +16,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// 2. Proses Aktivasi: Bersihkan cache lama jika ada update versi
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -33,7 +30,6 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// 3. Menangani Fetch/Network (Offline Support)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
@@ -42,16 +38,13 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// 4. Menangani Push Notification
 self.addEventListener('push', (event) => {
   const data = event.data ? event.data.text() : 'Notifikasi Warga Tulung';
-  
   const options = {
     body: data,
     icon: 'icon.png?v=1',
     badge: 'icon.png?v=1'
   };
-
   event.waitUntil(
     self.registration.showNotification('Warga Tulung', options)
   );

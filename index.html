@@ -5,30 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Warga Tulung</title>
 
-  <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json?v=1">
   <link rel="icon" type="image/png" sizes="192x192" href="icon.png?v=1">
   <link rel="apple-touch-icon" href="icon2.png?v=1">
   <meta name="theme-color" content="#0d6efd">
-
-  <!-- Style CSS Kamu -->
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <h1>Warga Tulung</h1>
 
-  <!-- Script Registrasi Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js', { scope: '/warga-tulung/' })
-          .then(reg => {
-            console.log('SW Warga Tulung berhasil terdaftar:', reg.scope);
-          })
-          .catch(err => {
-            console.error('Gagal mendaftarkan SW Warga Tulung:', err);
-          });
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('SW Tulung Berhasil:', reg.scope))
+          .catch(err => console.error('SW Tulung Gagal:', err));
       });
     }
   </script>
