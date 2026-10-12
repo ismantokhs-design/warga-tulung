@@ -14,7 +14,7 @@ let unsubscribeEvents = null;
 let unsubscribeInfo = null;
 
 // ==========================================
-// 1. PEMUATAN DATA REALTIME UNTUK PENGUMUMAN (TAB 1)
+// 1. PEMUATAN DATA REALTIME UNTUK PENGUMUMAN (TAB INFO)
 // ==========================================
 export function loadInformasiRealtime() {
   const containerInfo = document.getElementById("container-info-list");
@@ -29,7 +29,7 @@ export function loadInformasiRealtime() {
   unsubscribeInfo = onSnapshot(q, (snapshot) => {
     if (snapshot.empty) {
       containerInfo.innerHTML = `
-        <div class="info-empty-card">
+        <div class="info-empty-card" style="text-align: center; padding: 20px; color: #94A3B8;">
           <p class="empty-text-italic">Belum ada pengumuman.</p>
         </div>
       `;
@@ -39,12 +39,13 @@ export function loadInformasiRealtime() {
     const selectedWilayah = filterSelect ? filterSelect.value : "Semua Wilayah";
     renderInfoList(snapshot, selectedWilayah);
 
-    // Event Listener untuk Filter Dropdown Wilayah
     if (filterSelect) {
       filterSelect.onchange = (e) => {
         renderInfoList(snapshot, e.target.value);
       };
     }
+  }, (err) => {
+    console.error("Gagal memuat data informasi:", err);
   });
 }
 
@@ -59,7 +60,6 @@ function renderInfoList(snapshot, filterWilayah) {
     const item = docSnap.data();
     const infoId = docSnap.id;
 
-    // Filter berdasarkan Target Wilayah
     if (filterWilayah !== "Semua Wilayah" && item.targetWilayah && !item.targetWilayah.includes(filterWilayah)) {
       return;
     }
@@ -73,11 +73,10 @@ function renderInfoList(snapshot, filterWilayah) {
 
     card.innerHTML = `
       <div class="event-card-left" style="flex: 1;">
-        <input type="checkbox" class="event-checkbox">
         <div class="event-meta-info" style="width: 100%;">
           <h3 class="event-title-text">${item.judul || 'Tanpa Judul'}</h3>
           <span class="event-subtitle-text">${item.isi || '-'}</span>
-          <span class="event-status-label">${item.kategori || 'Pengumuman'} • ${item.targetWilayah || 'Semua Wilayah'} • ${tglFormatted}</span>
+          <span class="event-status-label" style="font-size: 11px; color: #64748B;">${item.kategori || 'Pengumuman'} • ${item.targetWilayah || 'Semua Wilayah'} • ${tglFormatted}</span>
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 10px;">
@@ -94,38 +93,19 @@ function renderInfoList(snapshot, filterWilayah) {
 
   if (count === 0) {
     containerInfo.innerHTML = `
-      <div class="info-empty-card">
+      <div class="info-empty-card" style="text-align: center; padding: 20px; color: #94A3B8;">
         <p class="empty-text-italic">Belum ada pengumuman untuk wilayah ini.</p>
       </div>
     `;
   }
-
-  // Handle Hapus Info
-  document.querySelectorAll(".btn-delete-info").forEach(btn => {
-    btn.onclick = async (e) => {
-      const id = e.target.getAttribute("data-id");
-      if (confirm("Hapus pengumuman ini?")) {
-        await deleteDoc(doc(db, "informasi", id));
-      }
-    };
-  });
-
-  // Handle Toggle Status Info
-  document.querySelectorAll(".toggle-status-info").forEach(toggle => {
-    toggle.onchange = async (e) => {
-      const id = e.target.getAttribute("data-id");
-      await updateDoc(doc(db, "informasi", id), {
-        aktif: e.target.checked
-      });
-    };
-  });
 }
 
 // ==========================================
-// 2. PEMUATAN DATA REALTIME UNTUK EVENT (TAB 2)
+// 2. PEMUATAN DATA REALTIME UNTUK EVENT (TAB EVENT)
 // ==========================================
 export function loadEventsRealtime() {
-  const containerList = document.getElementById("container-event-list");
+  // Hanya mencari container khusus event di dalam modul pengurus
+  const containerList = document.getElementById("container-kegiatan-list") || document.getElementById("container-event-list");
   if (!containerList) return;
 
   const eventsRef = collection(db, "events");
@@ -151,15 +131,17 @@ export function loadEventsRealtime() {
 
       const card = document.createElement("div");
       card.className = "event-card-item";
+      card.style.cssText = "background: #fff; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center;";
+
+      const tglFormatted = item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
 
       card.innerHTML = `
-        <div class="event-card-left">
-          <input type="checkbox" class="event-checkbox">
-          <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=200'}" alt="${item.judul || 'Event'}" class="event-thumb">
+        <div class="event-card-left" style="display: flex; gap: 12px; align-items: center;">
+          <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=200'}" alt="${item.judul || 'Event'}" class="event-thumb" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
           <div class="event-meta-info">
-            <h3 class="event-title-text">${item.judul || 'Tanpa Judul'}</h3>
-            <span class="event-subtitle-text">${item.deskripsi || '-'}</span>
-            <span class="event-status-label">Status</span>
+            <h3 class="event-title-text" style="font-size: 14px; font-weight: 700; color: #0F172A; margin: 0;">${item.judul || 'Tanpa Judul'}</h3>
+            <span class="event-subtitle-text" style="font-size: 12px; color: #64748B; display: block; margin-top: 2px;">${item.deskripsi || '-'}</span>
+            <span class="event-status-label" style="font-size: 10px; color: #00875A; font-weight: 600;">${tglFormatted}</span>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -173,144 +155,95 @@ export function loadEventsRealtime() {
 
       containerList.appendChild(card);
     });
-
-    // Handle Hapus Event
-    document.querySelectorAll(".btn-delete-event").forEach(btn => {
-      btn.onclick = async (e) => {
-        const id = e.target.getAttribute("data-id");
-        if (confirm("Hapus agenda kegiatan ini?")) {
-          await deleteDoc(doc(db, "events", id));
-        }
-      };
-    });
-
-    // Handle Toggle Status Event
-    document.querySelectorAll(".toggle-status-event").forEach(toggle => {
-      toggle.onchange = async (e) => {
-        const id = e.target.getAttribute("data-id");
-        await updateDoc(doc(db, "events", id), {
-          aktif: e.target.checked
-        });
-      };
-    });
+  }, (err) => {
+    console.error("Gagal memuat data event:", err);
   });
 }
 
 // ==========================================
-// 3. INISIALISASI MODUL & FORM SUBMIT
+// 3. INISIALISASI MODUL & BINDING EVENTS
 // ==========================================
 export function initAcaraModule() {
   loadInformasiRealtime();
   loadEventsRealtime();
 
-  // --- FORM SUBMIT INFORMASI BARU ---
-  const formInfo = document.getElementById("form-tambah-informasi");
-  if (formInfo) {
-    formInfo.onsubmit = async (e) => {
+  // SWITCH TAB NAVIGASI KHUSUS DI ACARA-KEGIATAN.HTML
+  const btnTabs = document.querySelectorAll(".tab-item, .tab-btn, [data-tab]");
+  btnTabs.forEach((btn) => {
+    btn.onclick = (e) => {
       e.preventDefault();
+      const tabTarget = btn.getAttribute("data-tab") || (btn.innerText.trim().toLowerCase() === "event" ? "event" : "info");
 
-      const judul = document.getElementById("info-judul")?.value.trim();
-      const targetWilayah = document.getElementById("info-wilayah")?.value;
-      const kategori = document.getElementById("info-kategori")?.value;
-      const tglWaktu = document.getElementById("info-tgl-waktu")?.value;
-      const isi = document.getElementById("info-isi")?.value.trim();
+      btnTabs.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
 
-      if (!judul || !isi || !tglWaktu) {
-        alert("Judul, Tanggal/Waktu, dan Isi Pengumuman wajib diisi!");
-        return;
-      }
+      const areaInfo = document.getElementById("tab-content-info") || document.getElementById("section-info");
+      const areaEvent = document.getElementById("tab-content-event") || document.getElementById("section-event");
+      const labelTittle = document.getElementById("title-kategori-aktif");
+      const btnHeader = document.getElementById("btn-trigger-tambah");
 
-      try {
-        await addDoc(collection(db, "informasi"), {
-          judul,
-          targetWilayah: targetWilayah || "Semua Wilayah (RT / RW)",
-          kategori: kategori || "Pengumuman",
-          tglWaktu,
-          isi,
-          aktif: true,
-          createdAt: new Date().toISOString()
-        });
-
-        alert("Pengumuman berhasil dipublikasikan!");
-        formInfo.reset();
-
-        const modalInfo = document.getElementById("modal-tambah-informasi");
-        if (modalInfo) modalInfo.classList.remove("active");
-
-      } catch (err) {
-        console.error("Gagal menambahkan pengumuman:", err);
-        alert("Gagal mempublikasikan pengumuman: " + err.message);
+      if (tabTarget === "event") {
+        if (areaInfo) areaInfo.style.display = "none";
+        if (areaEvent) areaEvent.style.display = "block";
+        if (labelTittle) labelTittle.innerText = "Daftar Event / Kegiatan Aktif";
+        if (btnHeader) {
+          btnHeader.innerText = "+ Tambah Event";
+          btnHeader.setAttribute("data-type", "event");
+        }
+      } else {
+        if (areaInfo) areaInfo.style.display = "block";
+        if (areaEvent) areaEvent.style.display = "none";
+        if (labelTittle) labelTittle.innerText = "Daftar Pengumuman Aktif";
+        if (btnHeader) {
+          btnHeader.innerText = "+ Tambah Informasi";
+          btnHeader.setAttribute("data-type", "info");
+        }
       }
     };
-  }
+  });
 
-  // --- UPLOAD GAMBAR PREVIEW UNTUK EVENT ---
-  const btnTriggerFile = document.getElementById("btn-trigger-file");
-  const inputFile = document.getElementById("input-file-gambar");
-  const fileNameDisplay = document.getElementById("file-name-display");
-  const imgPreview = document.getElementById("img-preview");
-  const previewText = document.getElementById("preview-text");
-
-  if (btnTriggerFile && inputFile) {
-    btnTriggerFile.onclick = () => inputFile.click();
-  }
-
-  if (inputFile) {
-    inputFile.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        if (fileNameDisplay) fileNameDisplay.innerText = file.name;
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          if (imgPreview) {
-            imgPreview.src = ev.target.result;
-            imgPreview.style.display = "block";
-          }
-          if (previewText) previewText.style.display = "none";
-        };
-        reader.readAsDataURL(file);
+  // DELEGASI KLIK UNTUK HAPUS & MODAL
+  document.addEventListener("click", async (e) => {
+    const btnDeleteInfo = e.target.closest(".btn-delete-info");
+    if (btnDeleteInfo) {
+      const id = btnDeleteInfo.getAttribute("data-id");
+      if (confirm("Hapus pengumuman ini?")) {
+        await deleteDoc(doc(db, "informasi", id));
       }
-    };
-  }
+      return;
+    }
 
-  // --- FORM SUBMIT EVENT BARU ---
-  const formEvent = document.getElementById("form-tambah-event");
-  if (formEvent) {
-    formEvent.onsubmit = async (e) => {
-      e.preventDefault();
-
-      const nama = document.getElementById("event-nama")?.value.trim();
-      const deskripsi = document.getElementById("event-deskripsi")?.value.trim();
-
-      if (!nama) {
-        alert("Nama event wajib diisi!");
-        return;
+    const btnDeleteEvent = e.target.closest(".btn-delete-event");
+    if (btnDeleteEvent) {
+      const id = btnDeleteEvent.getAttribute("data-id");
+      if (confirm("Hapus agenda kegiatan ini?")) {
+        await deleteDoc(doc(db, "events", id));
       }
+      return;
+    }
 
-      try {
-        await addDoc(collection(db, "events"), {
-          judul: nama,
-          deskripsi: deskripsi || "",
-          imageUrl: imgPreview && imgPreview.style.display !== "none" ? imgPreview.src : "",
-          tanggal: new Date().toISOString(),
-          aktif: true,
-          createdAt: new Date().toISOString()
-        });
-
-        alert("Event berhasil disimpan!");
-        formEvent.reset();
-
-        if (imgPreview) imgPreview.style.display = "none";
-        if (previewText) previewText.style.display = "block";
-        if (fileNameDisplay) fileNameDisplay.innerText = "Tidak ada yang dipilih";
-
-        const modalEvent = document.getElementById("modal-tambah-event");
-        if (modalEvent) modalEvent.classList.remove("active");
-
-      } catch (err) {
-        console.error("Gagal menambahkan event:", err);
-        alert("Gagal menyimpan event: " + err.message);
+    const btnTrigger = e.target.closest("#btn-trigger-tambah");
+    if (btnTrigger) {
+      const type = btnTrigger.getAttribute("data-type");
+      if (type === "event") {
+        const modalE = document.getElementById("modal-tambah-event");
+        if (modalE) modalE.classList.add("active");
+      } else {
+        const modalI = document.getElementById("modal-tambah-informasi");
+        if (modalI) modalI.classList.add("active");
       }
-    };
-  }
+    }
+  });
+
+  // TOGGLE STATUS LISTENER
+  document.addEventListener("change", async (e) => {
+    if (e.target.classList.contains("toggle-status-info")) {
+      const id = e.target.getAttribute("data-id");
+      await updateDoc(doc(db, "informasi", id), { aktif: e.target.checked });
+    }
+    if (e.target.classList.contains("toggle-status-event")) {
+      const id = e.target.getAttribute("data-id");
+      await updateDoc(doc(db, "events", id), { aktif: e.target.checked });
+    }
+  });
 }

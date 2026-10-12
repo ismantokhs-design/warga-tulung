@@ -1,49 +1,16 @@
 <style>
+  /* 1. CONTAINER UTAMA & SCROLL CLEARANCE */
   .profil-wilayah-container {
-    padding-bottom: 24px;
-    animation: fadeInWilayah 0.25s ease-out;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-bottom: 200px !important; /* Ruang ekstra bawah agar tidak terpotong */
+    box-sizing: border-box;
+    display: block !important;
+    height: auto !important;
   }
 
-  @keyframes fadeInWilayah {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Toast Notification Custom WargaKu */
-  .wargaku-toast {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-20px);
-    background-color: #00796B;
-    color: #FFFFFF;
-    padding: 12px 18px;
-    border-radius: 14px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    z-index: 10000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    max-width: 90%;
-    white-space: nowrap;
-  }
-
-  .wargaku-toast.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .wargaku-toast.error {
-    background-color: #E02424;
-  }
-
-  /* Back Button Header */
+  /* Header Section */
   .btn-back-link {
     background: none;
     border: none;
@@ -56,36 +23,39 @@
     gap: 6px;
     padding: 0;
     margin-bottom: 14px;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, color 0.15s ease;
   }
 
   .btn-back-link:hover {
+    color: #004D40;
     transform: translateX(-3px);
   }
 
-  /* Header Title */
   .wilayah-header-title {
     color: #00796B;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     margin: 0;
+    letter-spacing: -0.3px;
   }
 
   .wilayah-header-subtitle {
     color: #64748B;
     font-size: 12px;
-    margin-top: 3px;
-    margin-bottom: 18px;
+    margin-top: 4px;
+    margin-bottom: 22px;
   }
 
-  /* Card Box */
+  /* Card Component */
   .wilayah-card {
     background: #FFFFFF;
     border-radius: 18px;
     border: 1px solid #E2E8F0;
-    padding: 20px 18px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
-    margin-bottom: 16px;
+    padding: 22px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+    margin-bottom: 20px;
+    display: block !important;
+    height: auto !important;
   }
 
   .section-divider-title {
@@ -94,15 +64,22 @@
     color: #00796B;
     letter-spacing: 0.6px;
     text-transform: uppercase;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
     gap: 8px;
   }
 
   /* Form Elements */
+  #form-profil-wilayah {
+    display: block !important;
+    height: auto !important;
+  }
+
   .form-group-custom {
     margin-bottom: 16px;
+    width: 100%;
+    display: block;
   }
 
   .form-group-custom label {
@@ -112,11 +89,12 @@
     color: #475467;
     letter-spacing: 0.5px;
     margin-bottom: 6px;
+    text-transform: uppercase;
   }
 
   .input-custom {
     width: 100%;
-    padding: 10px 12px;
+    padding: 11px 14px;
     font-size: 13px;
     color: #0F172A;
     background-color: #F8FAFC;
@@ -133,61 +111,105 @@
     box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.12);
   }
 
-  /* Grid 2 Kolom */
-  .grid-two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+  textarea.input-custom {
+    resize: vertical;
+    min-height: 95px;
+    font-family: inherit;
+    line-height: 1.5;
   }
 
-  /* Dynamic Item Card RT */
+  .grid-two-col {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+    width: 100% !important;
+    margin-bottom: 16px;
+  }
+
+  .grid-two-col > .form-group-custom {
+    flex: 1 1 calc(50% - 8px) !important;
+    min-width: 220px !important;
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 640px) {
+    .grid-two-col > .form-group-custom {
+      flex: 1 1 100% !important;
+    }
+  }
+
+  /* 2. CARD ELEGAN UNTUK ITEM RT DINAMIS */
   .rt-item-card {
     background-color: #F8FAFC;
-    border: 1px dashed #CBD5E1;
+    border: 1px solid #E2E8F0;
     border-radius: 14px;
-    padding: 14px;
-    margin-bottom: 12px;
-    position: relative;
+    padding: 18px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .rt-item-card:hover {
+    border-color: #CBD5E1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   }
 
   .rt-item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #E2E8F0;
   }
 
-  .rt-item-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: #0F172A;
+  .rt-item-title-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #E8F5E9;
+    color: #00796B;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 8px;
+    letter-spacing: 0.3px;
   }
 
+  /* TOMBOL HAPUS ELEGAN */
   .btn-remove-rt {
-    background: #FEE2E2;
+    background-color: #FEE2E2;
     color: #DC2626;
     border: none;
     border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 11px;
+    padding: 6px 12px;
+    font-size: 11.5px;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
   }
 
   .btn-remove-rt:hover {
-    background: #FCA5A5;
+    background-color: #DC2626;
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
   }
 
-  /* Buttons */
+  .btn-remove-rt:active {
+    transform: scale(0.96);
+  }
+
+  /* 3. ACTION BUTTONS */
   .btn-add-rt {
     width: 100%;
-    padding: 10px;
-    background-color: #E8F5E9;
+    padding: 12px;
+    background-color: #F0FDF4;
     color: #00796B;
     border: 1.5px dashed #00796B;
-    border-radius: 10px;
-    font-size: 12px;
+    border-radius: 12px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -195,55 +217,47 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    margin-bottom: 16px;
+    margin-top: 12px;
   }
 
   .btn-add-rt:hover {
-    background-color: #C8E6C9;
+    background-color: #00796B;
+    color: #FFFFFF;
+    border-style: solid;
+    box-shadow: 0 4px 12px rgba(0, 121, 107, 0.15);
   }
 
   .btn-submit-primary {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background-color: #00796B;
     color: #FFFFFF;
     border: none;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 700;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    margin-top: 8px;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    margin-top: 20px;
+    margin-bottom: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    box-shadow: 0 4px 14px rgba(0, 121, 107, 0.25);
   }
 
   .btn-submit-primary:hover {
     background-color: #004D40;
+    box-shadow: 0 6px 18px rgba(0, 121, 107, 0.35);
   }
 
   .btn-submit-primary:active {
     transform: scale(0.99);
   }
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
 </style>
 
 <div class="profil-wilayah-container">
-
-  <!-- TOAST NOTIFIKASI MENGAMBANG HASIL SIMPAN -->
-  <div id="toast-profil-wilayah" class="wargaku-toast">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-      <polyline points="22 4 12 14.01 9 11.01"></polyline>
-    </svg>
-    <span id="toast-message">Profil Wilayah berhasil disimpan!</span>
-  </div>
 
   <!-- TOMBOL KEMBALI -->
   <button type="button" onclick="window.switchPage('more')" class="btn-back-link">
@@ -254,35 +268,33 @@
     Kembali ke Lainnya
   </button>
 
-  <!-- HEADER JUDUL -->
+  <!-- HEADER -->
   <h2 class="wilayah-header-title">Profil Wilayah</h2>
   <p class="wilayah-header-subtitle">Kelola informasi umum dan identitas administrasi wilayah setempat.</p>
 
   <form id="form-profil-wilayah">
 
-    <!-- CARD 1: INFORMASI WILAYAH UTAMA -->
+    <!-- CARD 1: IDENTITAS ADMINISTRASI -->
     <div class="wilayah-card">
       <div class="section-divider-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-          <circle cx="12" cy="10" r="3"></circle>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+          <path d="M2 12h20"></path>
         </svg>
         Identitas Administrasi
       </div>
 
-      <!-- PEDUKUHAN -->
       <div class="form-group-custom">
         <label>PEDUKUHAN</label>
-        <input type="text" id="wilayah-pedukuhan" class="input-custom" placeholder="Contoh: Potrobayan" required>
+        <input type="text" id="wilayah-pedukuhan" class="input-custom" placeholder="Contoh: Tulung" required>
       </div>
 
-      <!-- DESA / KELURAHAN -->
       <div class="form-group-custom">
         <label>DESA / KELURAHAN</label>
         <input type="text" id="wilayah-desa" class="input-custom" placeholder="Contoh: Srihardono" required>
       </div>
 
-      <!-- KECAMATAN & KABUPATEN -->
       <div class="grid-two-col">
         <div class="form-group-custom">
           <label>KECAMATAN</label>
@@ -295,7 +307,6 @@
         </div>
       </div>
 
-      <!-- PROVINSI & KODE POS -->
       <div class="grid-two-col">
         <div class="form-group-custom">
           <label>PROVINSI</label>
@@ -304,21 +315,20 @@
 
         <div class="form-group-custom">
           <label>KODE POS</label>
-          <input type="text" id="wilayah-kodepos" class="input-custom" placeholder="Contoh: 55762" required>
+          <input type="text" id="wilayah-kodepos" class="input-custom" placeholder="Contoh: 55771" required>
         </div>
       </div>
 
-      <!-- DESKRIPSI (TENTANG WILAYAH) -->
-      <div class="form-group-custom">
+      <div class="form-group-custom" style="margin-bottom: 0;">
         <label>DESKRIPSI (TENTANG WILAYAH)</label>
-        <textarea id="wilayah-deskripsi" class="input-custom" rows="3" placeholder="Tuliskan ringkasan profil, sejarah singkat, atau gambaran umum wilayah..." style="resize: vertical; font-family: inherit;"></textarea>
+        <textarea id="wilayah-deskripsi" class="input-custom" rows="3" placeholder="Tuliskan ringkasan profil atau gambaran umum wilayah..."></textarea>
       </div>
     </div>
 
-    <!-- CARD 2: STRUKTUR ORGANISASI DUKUH & RT -->
+    <!-- CARD 2: STRUKTUR ORGANISASI -->
     <div class="wilayah-card">
       <div class="section-divider-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
           <circle cx="9" cy="7" r="4"></circle>
           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -327,28 +337,21 @@
         Struktur Organisasi Pedukuhan
       </div>
 
-      <!-- DUKUH -->
-      <div class="grid-two-col">
+      <div class="grid-two-col" style="margin-bottom: 20px;">
         <div class="form-group-custom">
           <label>NAMA DUKUH</label>
-          <input type="text" id="dukuh-nama" class="input-custom" placeholder="Contoh: Pak Supri">
+          <input type="text" id="dukuh-nama" class="input-custom" placeholder="Contoh: Nico Hadisaputra">
         </div>
         <div class="form-group-custom">
           <label>KONTAK DUKUH (WA)</label>
-          <input type="text" id="dukuh-kontak" class="input-custom" placeholder="08123456789">
+          <input type="text" id="dukuh-kontak" class="input-custom" placeholder="08132800001">
         </div>
       </div>
 
-      <!-- CONTAINER REPEATER RT DINAMIS -->
-      <div style="font-size: 11px; font-weight: 700; color: #475467; letter-spacing: 0.5px; margin-bottom: 8px;">
-        DAFTAR RT & PENGURUS
-      </div>
+      <!-- CONTAINER TEMPAT REPEATER RT DI-RENDER JAVASCRIPT -->
+      <div id="container-list-rt"></div>
 
-      <div id="container-list-rt">
-        <!-- BARIS RT AKAN DITAMBAHKAN SECARA DINAMIS LEWAT JAVASCRIPT -->
-      </div>
-
-      <!-- TOMBOL TAMBAH BARIS RT -->
+      <!-- TOMBOL TAMBAH RT -->
       <button type="button" id="btn-tambah-rt" class="btn-add-rt">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -360,12 +363,12 @@
 
     <!-- SUBMIT BUTTON -->
     <button type="submit" id="btn-simpan-profil" class="btn-submit-primary">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
         <polyline points="17 21 17 13 7 13 7 21"></polyline>
         <polyline points="7 3 7 8 15 8"></polyline>
       </svg>
-      Simpan Ke Firestore
+      <span>Simpan Ke Firestore</span>
     </button>
 
   </form>

@@ -8,9 +8,7 @@ import {
   createUserWithEmailAndPassword, 
   doc, 
   setDoc, 
-  getDoc, 
-  updateDoc,
-  deleteDoc,
+  getDoc,
   collection, 
   onSnapshot,
   query,
@@ -19,14 +17,17 @@ import {
 } from "./firebase-config.js";
 
 import { 
-  initProfilWilayahModule, 
-  displayReadonlyProfilWilayah 
+  initProfilWilayahModule,
+  displayReadonlyProfilWilayah
 } from "./modules/profil-wilayah.js";
 
 // PEMETAAN FILE HTML DALAM FOLDER PAGES
 const pageFiles = {
   'profil': 'profil.html',
+  'profil-wilayah': 'profil-wilayah.html',
   'event': 'event.html',
+  'acara-kegiatan': 'acara-kegiatan.html',
+  'notulen-rapat': 'notulen-rapat.html',
   'pesan': 'pesan.html',
   'more': 'more.html',
   'admin-panel': 'kependudukan.html',
@@ -34,11 +35,8 @@ const pageFiles = {
   'laporan': 'laporan.html',
   'grafik': 'grafik.html',
   'pengaturan': 'pengaturan.html',
-  'setting-user': 'setting-user.html',
-  'profil-wilayah': 'profil-wilayah.html'
+  'setting-user': 'setting-user.html'
 };
-
-let globalUsersList = [];
 
 // 1. HANDLER DROPDOWN PROFILE & GANTI PASSWORD
 window.toggleProfileDropdown = function(event) {
@@ -70,15 +68,15 @@ async function loadPageContent(pageId) {
       const res = await fetch(`./pages/${pageFiles[pageId]}`);
       if (res.ok) {
         container.innerHTML = await res.text();
-        initDynamicFormEvents(pageId);
+        await initDynamicFormEvents(pageId);
       } else {
         console.error(`Gagal mengambil file ./pages/${pageFiles[pageId]}`);
       }
     } catch (err) {
       console.error(`Gagal memuat ${pageFiles[pageId]}:`, err);
     }
-  } else if (container.innerHTML.trim() !== "") {
-    initDynamicFormEvents(pageId);
+  } else {
+    await initDynamicFormEvents(pageId);
   }
 }
 
@@ -198,9 +196,105 @@ function initLoginEvents() {
 }
 
 // 6. INISIALISASI EVENT DYNAMIC PAGES
-function initDynamicFormEvents(pageId) {
+async function initDynamicFormEvents(pageId) {
+  // PROFIL RINGKASAN WARGA
   if (pageId === 'profil') {
     displayReadonlyProfilWilayah();
+  }
+
+  // EVENT WARGA
+  if (pageId === 'event') {
+    const publicContainer = document.getElementById('public-events-list') || document.getElementById('container-event-list');
+    
+    if (publicContainer) {
+      const eventsRef = collection(db, 'events');
+      const q = query(eventsRef, orderBy('createdAt', 'desc'));
+
+      onSnapshot(q, (snapshot) => {
+        publicContainer.innerHTML = '';
+
+        if (snapshot.empty) {
+          publicContainer.innerHTML = '<div class="event-empty-box">Belum ada kegiatan/event warga.</div>';
+          return;
+        }
+
+        snapshot.forEach((docSnap) => {
+          const item = docSnap.data();
+          if (item.aktif === false) return;
+
+          let tglFormatted = 'Tanggal tidak ditentukan';
+          if (item.tanggal) {
+            const d = new Date(item.tanggal);
+            tglFormatted = d.toLocaleDateString('id-ID', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            });
+          }
+
+          const card = document.createElement('div');
+          card.className = 'event-display-card';
+          const defaultImg = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=600';
+
+          card.innerHTML = `
+            <img src="${item.imageUrl || defaultImg}" alt="${item.judul || 'Event'}" class="event-card-banner">
+            <div class="event-card-body">
+              <span class="event-card-date">${tglFormatted}</span>
+              <h3 class="event-card-title">${item.judul || 'Tanpa Judul'}</h3>
+              <p class="event-card-desc">${item.deskripsi || '-'}</p>
+              <a href="javascript:void(0)" class="event-read-more">
+                Baca selengkapnya 
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </a>
+            </div>
+          `;
+
+          publicContainer.appendChild(card);
+        });
+
+        if (publicContainer.children.length === 0) {
+          publicContainer.innerHTML = '<div class="event-empty-box">Belum ada event aktif.</div>';
+        }
+      }, (err) => {
+        console.error("Gagal memuat event:", err);
+      });
+    }
+  }
+
+  // ACARA & KEGIATAN
+  if (pageId === 'acara-kegiatan') {
+    try {
+      const mod = await import('./modules/acara-kegiatan.js');
+      if (mod && typeof mod.initAcaraModule === 'function') {
+        mod.initAcaraModule();
+      }
+    } catch (err) {
+      console.error("Gagal memuat modul acara-kegiatan.js:", err);
+    }
+  }
+
+  // NOTULEN RAPAT
+  if (pageId === 'notulen-rapat') {
+    try {
+      const mod = await import('./modules/notulen-rapat.js');
+      if (mod && typeof mod.initNotulenModule === 'function') {
+        mod.initNotulenModule();
+      }
+    } catch (err) {
+      console.error("Gagal memuat modul notulen-rapat.js:", err);
+    }
+  }
+
+  // SETTING USER (KEAMANAN AKUN)
+  if (pageId === 'setting-user') {
+    try {
+      const mod = await import('./modules/setting-user.js');
+      if (mod && typeof mod.initSettingUserModule === 'function') {
+        mod.initSettingUserModule();
+      }
+    } catch (err) {
+      console.error("Gagal memuat modul setting-user.js:", err);
+    }
   }
 
   if (pageId === 'admin-panel') {
@@ -238,116 +332,40 @@ function initDynamicFormEvents(pageId) {
     loadUsersTable();
   }
 
-  if (pageId === 'setting-user') {
-    loadSettingUsersRealtime();
-
-    const formAddUser = document.getElementById("form-setting-add-user");
-    if (formAddUser) {
-      formAddUser.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const btnSubmit = document.getElementById("btn-submit-add-user");
-        const editUid = document.getElementById("setting-user-edit-id").value;
-
-        const nama = document.getElementById("setting-user-nama").value.trim();
-        const email = document.getElementById("setting-user-email").value.trim();
-        const pass = document.getElementById("setting-user-password").value;
-        const rtrw = document.getElementById("setting-user-rtrw").value.trim();
-        const role = document.getElementById("setting-user-role").value;
-
-        if (btnSubmit) {
-          btnSubmit.disabled = true;
-          btnSubmit.innerText = "Memproses...";
-        }
-
-        try {
-          if (editUid) {
-            await updateDoc(doc(db, "users", editUid), {
-              nama: nama,
-              email: email,
-              rt_rw: rtrw,
-              role: role,
-              updatedAt: new Date()
-            });
-            alert("Data pengguna berhasil diperbarui!");
-            resetUserForm();
-          } else {
-            const res = await createUserWithEmailAndPassword(secondaryAuth, email, pass);
-            const newUser = res.user;
-
-            await setDoc(doc(db, "users", newUser.uid), {
-              uid: newUser.uid,
-              nama: nama,
-              email: email,
-              rt_rw: rtrw,
-              role: role,
-              createdAt: new Date()
-            });
-
-            await signOut(secondaryAuth);
-            alert("Berhasil menambahkan pengguna baru: " + nama);
-            resetUserForm();
-          }
-        } catch (err) {
-          alert("Gagal memproses pengguna: " + err.message);
-        } finally {
-          if (btnSubmit) {
-            btnSubmit.disabled = false;
-            btnSubmit.innerText = editUid ? "Simpan Perubahan" : "Tambah User Baru";
-          }
-        }
-      });
-    }
-
-    const searchInput = document.getElementById("search-setting-user");
-    if (searchInput) {
-      searchInput.addEventListener("input", (e) => {
-        const keyword = e.target.value.toLowerCase();
-        const filtered = globalUsersList.filter(u => 
-          (u.nama && u.nama.toLowerCase().includes(keyword)) || 
-          (u.email && u.email.toLowerCase().includes(keyword))
-        );
-        renderSettingUsersTable(filtered);
-      });
-    }
-  }
-
   if (pageId === 'profil-wilayah') {
     initProfilWilayahModule();
   }
 }
 
-// 7. SWITCH PAGE GLOBAL (DIREVISI TOTAL AGAR RESPONSIVE & EKSPLISIT)
+// 7. SWITCH PAGE GLOBAL
 window.switchPage = async function(pageId, element) {
   await loadPageContent(pageId);
 
-  // Sembunyikan semua halaman
   document.querySelectorAll('.page').forEach(page => {
     page.classList.remove('active');
     page.style.display = 'none';
   });
 
-  // Nonaktifkan semua indikator menu
-  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-  
-  // Tampilkan halaman tujuan
+  document.querySelectorAll('.sidebar-item, .nav-item').forEach(item => {
+    item.classList.remove('active');
+  });
+
   const targetPage = document.getElementById(pageId);
   if (targetPage) {
     targetPage.classList.add('active');
     targetPage.style.display = 'block';
   }
 
-  // Tandai tombol nav yang diklik
   if (element) {
     element.classList.add('active');
   } else {
-    const moreNav = document.getElementById('nav-more-link');
-    const subPages = ['more', 'admin-panel', 'keuangan', 'laporan', 'grafik', 'pengaturan', 'setting-user', 'profil-wilayah'];
-    if (moreNav && subPages.includes(pageId)) {
-      moreNav.classList.add('active');
+    const subPages = ['more', 'admin-panel', 'keuangan', 'laporan', 'grafik', 'pengaturan', 'setting-user', 'profil-wilayah', 'acara-kegiatan', 'notulen-rapat'];
+    if (subPages.includes(pageId)) {
+      const activeMore = document.getElementById('nav-more-link');
+      if (activeMore) activeMore.classList.add('active');
     }
   }
 
-  // Auto scroll area utama ke paling atas
   const mainContainer = document.querySelector('.main-content');
   if (mainContainer) {
     mainContainer.scrollTop = 0;
@@ -418,37 +436,73 @@ function listenInformasiTerbaruBeranda() {
   });
 }
 
-// 10. LISTEN AUTH STATUS (DIPERBAIKI AGAR NAV MORE TAMPIL TANPA SYARAT)
+// 9b. LISTEN NOTULEN RAPAT TERBARU BERANDA (REALTIME FIRESTORE)
+function listenNotulenTerbaruBeranda() {
+  const container = document.getElementById("beranda-notulen-card-container");
+  if (!container) return;
+
+  const notulenRef = collection(db, "notulen_rapat");
+  const q = query(notulenRef, orderBy("createdAt", "desc"), limit(1));
+
+  onSnapshot(q, (snapshot) => {
+    if (snapshot.empty) {
+      container.innerHTML = `
+        <p style="color: #94A3B8; font-style: italic; font-size: 13px; margin: 0;">
+          Belum ada catatan notulen rapat.
+        </p>
+      `;
+      return;
+    }
+
+    snapshot.forEach((docSnap) => {
+      const item = docSnap.data();
+
+      let tglText = "-";
+      if (item.tanggal) {
+        const d = new Date(item.tanggal);
+        tglText = d.toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        });
+      }
+
+      container.innerHTML = `
+        <div class="info-badges-row">
+          <span class="badge-wilayah">📍 ${item.lokasi || 'Balai RT'}</span>
+          <span class="badge-category" style="background:#F1F5F9; color:#475569;">👤 ${item.pemimpin || 'Pengurus'}</span>
+          
+          <div class="info-time-text">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>${tglText}</span>
+          </div>
+        </div>
+
+        <h3 class="info-item-title">${item.agenda || 'Tanpa Agenda'}</h3>
+        <p class="info-item-desc" style="white-space: pre-line;">${item.isi || '-'}</p>
+      `;
+    });
+  });
+}
+
+// 10. LISTEN AUTH STATUS
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     document.getElementById("login-overlay").style.display = "none";
     document.getElementById("app-container").style.display = "flex";
 
-    // JALANKAN LISTENER PAPAN INFORMASI BERANDA
     listenInformasiTerbaruBeranda();
+    listenNotulenTerbaruBeranda();
 
     const userDoc = await getDoc(doc(db, "users", user.uid));
     if (userDoc.exists()) {
       const userData = userDoc.data();
       const nama = userData.nama || "Pengguna";
       document.getElementById("user-name").innerText = "Selamat datang, " + nama;
-
-      try {
-        const wilayahDoc = await getDoc(doc(db, "profil", "wilayah"));
-        if (wilayahDoc.exists()) {
-          const dataW = wilayahDoc.data();
-          const desaName = dataW.desa ? `Desa ${dataW.desa}` : "";
-          const userRtRw = userData.rt_rw || "";
-          
-          const lokasiLengkap = [userRtRw, desaName].filter(Boolean).join(", ");
-          document.getElementById("user-location").innerText = lokasiLengkap || (userData.rt_rw || "RT 03 / RW 05");
-        } else {
-          document.getElementById("user-location").innerText = userData.rt_rw || "RT 03 / RW 05";
-        }
-      } catch (err) {
-        console.error("Gagal memuat profil wilayah untuk header:", err);
-        document.getElementById("user-location").innerText = userData.rt_rw || "RT 03 / RW 05";
-      }
+      document.getElementById("user-location").innerText = userData.rt_rw || "RT 03 / RW 05";
 
       const initials = nama.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
       if (document.getElementById("user-avatar-initials")) {
@@ -462,7 +516,6 @@ onAuthStateChanged(auth, async (user) => {
       }
     }
 
-    // PASTIKAN MENU LAINNYA TAMPIL & DAPAT DIKLIK
     const navMoreLink = document.getElementById("nav-more-link");
     if (navMoreLink) {
       navMoreLink.classList.remove("hidden");
@@ -476,7 +529,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// 11. LOGOUT
+// 11. LOGOUT & DELEGATION KLIK GLOBAL
 document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", async (e) => {
     if (e.target && (e.target.id === "btn-logout" || e.target.closest("#btn-logout"))) {
@@ -485,7 +538,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // DELEGATION KLIK GLOBAL UNTUK MENCEGAH KLIK NAV BOTTON KELUAR/SANGKUT
   const bottomNav = document.querySelector(".bottom-nav");
   if (bottomNav) {
     bottomNav.addEventListener("click", (e) => {
@@ -528,122 +580,7 @@ function loadUsersTable() {
   });
 }
 
-// 13. LOAD USER SETTING USER
-function loadSettingUsersRealtime() {
-  const usersRef = collection(db, "users");
-  onSnapshot(usersRef, (snapshot) => {
-    globalUsersList = [];
-    snapshot.forEach((docSnap) => {
-      globalUsersList.push({ id: docSnap.id, ...docSnap.data() });
-    });
-    renderSettingUsersTable(globalUsersList);
-  });
-}
-
-function renderSettingUsersTable(users) {
-  const tbody = document.getElementById("setting-users-tbody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-
-  if (users.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="3" class="text-center">Pengguna tidak ditemukan.</td></tr>`;
-    return;
-  }
-
-  users.forEach((user) => {
-    let badgeClass = "badge-warga";
-    const roleLower = (user.role || "warga").toLowerCase();
-    if (roleLower === "admin") badgeClass = "badge-admin";
-    else if (roleLower === "pengurus") badgeClass = "badge-pengurus";
-
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>
-        <strong>${user.nama || "Tanpa Nama"}</strong><br>
-        <span style="font-size: 11px; color: var(--text-muted);">${user.email || "-"}</span><br>
-        <span style="font-size: 10px; color: var(--text-muted);">${user.rt_rw || "-"}</span>
-      </td>
-      <td>
-        <span class="badge-role ${badgeClass}">${user.role || "warga"}</span>
-      </td>
-      <td style="text-align: center; white-space: nowrap;">
-        <button type="button" class="btn-edit-user" data-id="${user.id}" style="background: #3b82f6; color: white; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; margin-right: 4px;">Edit</button>
-        <button type="button" class="btn-delete-user" data-id="${user.id}" data-nama="${user.nama || 'User'}" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">Hapus</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  document.querySelectorAll(".btn-edit-user").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      const uid = e.target.getAttribute("data-id");
-      const targetUser = globalUsersList.find(u => u.id === uid);
-      if (!targetUser) return;
-
-      document.getElementById("setting-user-edit-id").value = uid;
-      document.getElementById("setting-user-nama").value = targetUser.nama || "";
-      document.getElementById("setting-user-email").value = targetUser.email || "";
-      document.getElementById("setting-user-rtrw").value = targetUser.rt_rw || "";
-      document.getElementById("setting-user-role").value = targetUser.role || "warga";
-
-      document.getElementById("form-user-title").innerText = "Edit Data Pengguna";
-      document.getElementById("form-user-desc").innerText = "Perbarui informasi pengguna yang dipilih.";
-      document.getElementById("btn-submit-add-user").innerText = "Simpan Perubahan";
-      document.getElementById("group-user-password").style.display = "none";
-      document.getElementById("btn-cancel-edit-user").classList.remove("hidden");
-
-      const mainContainer = document.querySelector('.main-content');
-      if (mainContainer) mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  });
-
-  document.querySelectorAll(".btn-delete-user").forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
-      const uid = e.target.getAttribute("data-id");
-      const nama = e.target.getAttribute("data-nama");
-
-      if (confirm(`Apakah Anda yakin ingin menghapus data pengguna "${nama}" dari Firestore?`)) {
-        try {
-          await deleteDoc(doc(db, "users", uid));
-          alert("Pengguna berhasil dihapus.");
-        } catch (err) {
-          alert("Gagal menghapus pengguna: " + err.message);
-        }
-      }
-    });
-  });
-}
-
-document.addEventListener("click", (e) => {
-  if (e.target && e.target.id === "btn-cancel-edit-user") {
-    resetUserForm();
-  }
-});
-
-function resetUserForm() {
-  const form = document.getElementById("form-setting-add-user");
-  if (form) form.reset();
-
-  const editId = document.getElementById("setting-user-edit-id");
-  if (editId) editId.value = "";
-
-  const title = document.getElementById("form-user-title");
-  if (title) title.innerText = "Tambah Pengguna Baru";
-
-  const desc = document.getElementById("form-user-desc");
-  if (desc) desc.innerText = "Entri akun baru untuk warga atau pengurus RT/RW.";
-
-  const btnSubmit = document.getElementById("btn-submit-add-user");
-  if (btnSubmit) btnSubmit.innerText = "Tambah User Baru";
-
-  const passGroup = document.getElementById("group-user-password");
-  if (passGroup) passGroup.style.display = "block";
-
-  const btnCancel = document.getElementById("btn-cancel-edit-user");
-  if (btnCancel) btnCancel.classList.add("hidden");
-}
-
-// 14. STATISTIK
+// 13. STATISTIK
 const statRef = doc(db, "kependudukan", "statistik");
 onSnapshot(statRef, (docSnap) => {
   if (docSnap.exists()) {

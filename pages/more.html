@@ -152,18 +152,7 @@
     <div class="more-menu-group">
       
       <!-- MENU ACARA & KEGIATAN -->
-      <a href="javascript:void(0)" class="more-menu-item" onclick="(async () => {
-        const target = document.getElementById('more') || document.querySelector('.more-container')?.parentElement;
-        if (!target) return;
-        try {
-          const res = await fetch('./pages/acara-kegiatan.html');
-          if (res.ok) {
-            target.innerHTML = await res.text();
-            const mod = await import('../modules/acara-kegiatan.js');
-            if (mod && mod.initAcaraModule) mod.initAcaraModule();
-          }
-        } catch(err) { console.error('Gagal:', err); }
-      })()">
+      <a href="javascript:void(0)" class="more-menu-item" onclick="switchPage('acara-kegiatan', this)">
         <div class="more-menu-left">
           <div class="more-icon-box">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -182,7 +171,7 @@
       </a>
 
       <!-- MENU NOTULEN RAPAT -->
-      <a href="javascript:void(0)" class="more-menu-item" onclick="alert('Fitur Notulen Rapat akan segera hadir!')">
+      <a href="javascript:void(0)" class="more-menu-item" onclick="switchPage('notulen-rapat', this)">
         <div class="more-menu-left">
           <div class="more-icon-box">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -243,7 +232,7 @@
     <div class="more-section-label">Pengaturan & Informasi</div>
     <div class="more-menu-group">
 
-      <a href="javascript:void(0)" class="more-menu-item" onclick="alert('Fitur Keamanan Akun')">
+      <a href="javascript:void(0)" class="more-menu-item" onclick="switchPage('setting-user', this)">
         <div class="more-menu-left">
           <div class="more-icon-box">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -258,7 +247,8 @@
         <svg class="more-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </a>
 
-      <a href="javascript:void(0)" class="more-menu-item" onclick="alert('Fitur Profil Wilayah')">
+      <!-- MENGARAHKAN KE PROFIL WILAYAH UTAMA -->
+      <a href="javascript:void(0)" class="more-menu-item" onclick="switchPage('profil-wilayah', this)">
         <div class="more-menu-left">
           <div class="more-icon-box">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

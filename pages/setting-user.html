@@ -10,8 +10,13 @@
   }
 
   /* Header Section */
-  .setting-header {
+  .setting-header-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 18px;
+    gap: 12px;
+    flex-wrap: wrap;
   }
 
   .setting-title {
@@ -27,27 +32,35 @@
     margin-top: 3px;
   }
 
-  /* Card Box Component */
+  /* Main Card Table Box */
   .setting-card {
     background: #FFFFFF;
     border-radius: 18px;
     border: 1px solid #E2E8F0;
     padding: 18px 16px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
-    margin-bottom: 18px;
   }
 
-  .form-group-custom {
-    margin-bottom: 14px;
-  }
-
-  .form-group-custom label {
-    display: block;
-    font-size: 11px;
+  .btn-tambah-user {
+    background-color: #00796B;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 12.5px;
     font-weight: 700;
-    color: #475467;
-    letter-spacing: 0.5px;
-    margin-bottom: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 3px 8px rgba(0, 121, 107, 0.2);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .btn-tambah-user:hover {
+    background-color: #004D40;
+    transform: translateY(-1px);
   }
 
   .input-custom {
@@ -69,39 +82,7 @@
     box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.12);
   }
 
-  /* Action Buttons */
-  .btn-action-primary {
-    width: 100%;
-    padding: 11px;
-    background-color: #00796B;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-top: 6px;
-  }
-
-  .btn-action-primary:hover {
-    background-color: #004D40;
-  }
-
-  .btn-action-cancel {
-    width: 100%;
-    padding: 10px;
-    background-color: #F1F5F9;
-    color: #475467;
-    border: none;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 8px;
-  }
-
-  /* Table Section */
+  /* Table Styles */
   .table-responsive {
     overflow-x: auto;
     margin-top: 10px;
@@ -118,13 +99,13 @@
     color: #64748B;
     font-weight: 700;
     text-align: left;
-    padding: 10px;
+    padding: 10px 12px;
     border-bottom: 1.5px solid #E2E8F0;
     white-space: nowrap;
   }
 
   .user-table td {
-    padding: 12px 10px;
+    padding: 12px;
     border-bottom: 1px solid #F1F5F9;
     color: #0F172A;
   }
@@ -142,56 +123,122 @@
   .badge-admin { background-color: #DEF7EC; color: #03543F; }
   .badge-pengurus { background-color: #E1EFFE; color: #1E429F; }
   .badge-warga { background-color: #F3F4F6; color: #374151; }
+
+  /* ELEGANT POPUP MODAL STYLES */
+  .modal-user-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  .modal-user-overlay.active {
+    display: flex;
+  }
+
+  .modal-user-content {
+    background: #FFFFFF;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 480px;
+    padding: 22px 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 90dvh;
+    overflow-y: auto;
+    animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header-text {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0F172A;
+  }
+
+  .modal-subtitle-text {
+    font-size: 11px;
+    color: #64748B;
+    margin-top: 2px;
+  }
+
+  .form-group-custom {
+    margin-bottom: 12px;
+  }
+
+  .form-group-custom label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #475467;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+
+  .modal-footer-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .btn-action-primary {
+    padding: 10px 18px;
+    background-color: #00796B;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .btn-action-primary:hover {
+    background-color: #004D40;
+  }
+
+  .btn-action-cancel {
+    padding: 10px 16px;
+    background-color: #F1F5F9;
+    color: #475467;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
 </style>
 
 <div class="setting-user-container">
   
-  <!-- HEADER HALAMAN -->
-  <div class="setting-header">
-    <h2 class="setting-title" id="form-user-title">Keamanan & Akun Pengguna</h2>
-    <p class="setting-subtitle" id="form-user-desc">Kelola entri pengguna serta hak akses akun warga & pengurus.</p>
+  <!-- HEADER HALAMAN & TOMBOL TAMBAH -->
+  <div class="setting-header-wrap">
+    <div>
+      <h2 class="setting-title">Keamanan & Akun Pengguna</h2>
+      <p class="setting-subtitle">Kelola entri pengguna serta hak akses akun warga & pengurus.</p>
+    </div>
+    <button type="button" class="btn-tambah-user" id="btn-open-modal-user">
+      <span>+ Tambah Pengguna</span>
+    </button>
   </div>
 
-  <!-- FORM EDIT/TAMBAH PENGGUNA -->
-  <div class="setting-card">
-    <form id="form-setting-add-user">
-      <input type="hidden" id="setting-user-edit-id" value="">
-
-      <div class="form-group-custom">
-        <label>NAMA LENGKAP</label>
-        <input type="text" id="setting-user-nama" class="input-custom" placeholder="Contoh: Budi Santoso" required>
-      </div>
-
-      <div class="form-group-custom">
-        <label>EMAIL / USERNAME</label>
-        <input type="email" id="setting-user-email" class="input-custom" placeholder="nama@wargaku.com" required>
-      </div>
-
-      <div class="form-group-custom" id="group-user-password">
-        <label>KATA SANDI</label>
-        <input type="password" id="setting-user-password" class="input-custom" placeholder="••••••••">
-      </div>
-
-      <div class="form-group-custom">
-        <label>RT / RW</label>
-        <input type="text" id="setting-user-rtrw" class="input-custom" placeholder="RT 03 / RW 05" required>
-      </div>
-
-      <div class="form-group-custom">
-        <label>PERAN (ROLE)</label>
-        <select id="setting-user-role" class="input-custom" required>
-          <option value="warga">Warga</option>
-          <option value="pengurus">Pengurus RT</option>
-          <option value="admin">Admin System</option>
-        </select>
-      </div>
-
-      <button type="submit" id="btn-submit-add-user" class="btn-action-primary">Tambah User Baru</button>
-      <button type="button" id="btn-cancel-edit-user" class="btn-action-cancel hidden">Batal Edit</button>
-    </form>
-  </div>
-
-  <!-- TABEL DAFTAR PENGGUNA -->
+  <!-- TABEL DAFTAR PENGGUNA (UTAMA) -->
   <div class="setting-card">
     <div style="margin-bottom: 12px;">
       <label style="font-size: 11px; font-weight: 700; color: #64748B;">CARI PENGGUNA</label>
@@ -216,4 +263,52 @@
     </div>
   </div>
 
+</div>
+
+<!-- POPUP MODAL INPUT/EDIT PENGGUNA -->
+<div class="modal-user-overlay" id="modal-setting-user">
+  <div class="modal-user-content">
+    <div>
+      <div class="modal-header-text" id="form-user-title">Tambah Pengguna Baru</div>
+      <div class="modal-subtitle-text" id="form-user-desc">Entri akun baru untuk warga atau pengurus RT/RW.</div>
+    </div>
+
+    <form id="form-setting-add-user">
+      <input type="hidden" id="setting-user-edit-id" value="">
+
+      <div class="form-group-custom">
+        <label>NAMA LENGKAP *</label>
+        <input type="text" id="setting-user-nama" class="input-custom" placeholder="Contoh: Budi Santoso" required>
+      </div>
+
+      <div class="form-group-custom">
+        <label>EMAIL / USERNAME *</label>
+        <input type="email" id="setting-user-email" class="input-custom" placeholder="nama@wargaku.com" required>
+      </div>
+
+      <div class="form-group-custom" id="group-user-password">
+        <label>KATA SANDI *</label>
+        <input type="password" id="setting-user-password" class="input-custom" placeholder="••••••••">
+      </div>
+
+      <div class="form-group-custom">
+        <label>RT / RW *</label>
+        <input type="text" id="setting-user-rtrw" class="input-custom" placeholder="RT 03 / RW 05" required>
+      </div>
+
+      <div class="form-group-custom">
+        <label>PERAN (ROLE) *</label>
+        <select id="setting-user-role" class="input-custom" required>
+          <option value="warga">Warga</option>
+          <option value="pengurus">Pengurus RT</option>
+          <option value="admin">Admin System</option>
+        </select>
+      </div>
+
+      <div class="modal-footer-btns">
+        <button type="button" id="btn-cancel-edit-user" class="btn-action-cancel">Batal</button>
+        <button type="submit" id="btn-submit-add-user" class="btn-action-primary">Simpan User</button>
+      </div>
+    </form>
+  </div>
 </div>

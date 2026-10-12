@@ -13,7 +13,6 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* SEMBUNYIKAN SCROLLBAR VISUAL DI SEMUA BROWSER */
     ::-webkit-scrollbar {
       display: none !important;
       width: 0 !important;
@@ -29,8 +28,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      -ms-overflow-style: none; /* IE dan Edge */
-      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     #login-overlay {
@@ -43,7 +42,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
+      z-index: 99999;
       padding: 12px;
     }
 
@@ -52,13 +51,16 @@
       max-width: 430px;
       height: 100dvh;
       background-color: #F8FAFC;
-      display: none;
+      display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
     }
 
-    /* TOPBAR BANNER HEADER BERANDA */
+    .desktop-sidebar {
+      display: none;
+    }
+
     .topbar-banner {
       background-color: #E8F5E9;
       padding: 16px 16px 18px 16px;
@@ -84,7 +86,6 @@
       letter-spacing: -0.3px;
     }
 
-    /* Avatar Badge */
     .avatar-badge {
       width: 36px;
       height: 36px;
@@ -106,7 +107,6 @@
       transform: scale(0.95);
     }
 
-    /* DROPDOWN MENU PROFILE */
     .profile-dropdown {
       position: absolute;
       top: 44px;
@@ -169,7 +169,6 @@
       background-color: #FDE8E8;
     }
 
-    /* Profile Card Info */
     .profile-card {
       background-color: #FFFFFF;
       border-radius: 16px;
@@ -209,16 +208,17 @@
       margin-top: 2px;
     }
 
-    /* AREA UTAMA YANG BISA DI-SCROLL DENGAN BEBAS NAIK TURUN */
+    /* AREA KONTEN UTAMA MOBILE */
     .main-content {
       width: 100%;
       height: calc(100dvh - 54px);
-      padding: 12px 16px 100px 16px; /* Bottom padding 100px agar konten paling bawah tidak tertutup Bottom Nav */
+      padding: 12px 16px 140px 16px !important;
       flex: 1;
       overflow-y: auto !important;
       -webkit-overflow-scrolling: touch;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      box-sizing: border-box;
     }
 
     .main-content::-webkit-scrollbar {
@@ -233,7 +233,7 @@
     }
 
     .page.active {
-      display: block;
+      display: block !important;
     }
 
     .section-title {
@@ -285,7 +285,6 @@
       font-weight: 500;
     }
 
-    /* DESAIN PAPAN INFORMASI WILAYAH TERBARU */
     .info-board-section {
       margin-top: 14px;
     }
@@ -321,56 +320,6 @@
       gap: 8px;
     }
 
-    .info-badges-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .badge-category {
-      background-color: #DCFCE7;
-      color: #059669;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 10px;
-    }
-
-    .badge-wilayah {
-      background-color: #EFF6FF;
-      color: #2563EB;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 10px;
-    }
-
-    .info-time-text {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 10px;
-      color: #94A3B8;
-      font-weight: 500;
-      margin-left: auto;
-    }
-
-    .info-item-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #0F172A;
-      margin: 0;
-    }
-
-    .info-item-desc {
-      font-size: 11.5px;
-      color: #64748B;
-      line-height: 1.4;
-      margin: 0;
-    }
-
-    /* Bottom Navigation Bar Presisi */
     .bottom-nav {
       position: absolute;
       bottom: 0;
@@ -383,8 +332,9 @@
       justify-content: space-around;
       align-items: center;
       padding: 6px 0 8px 0;
-      z-index: 100;
+      z-index: 9999 !important;
       flex-shrink: 0;
+      pointer-events: auto;
     }
 
     .nav-item {
@@ -401,6 +351,7 @@
       transition: color 0.2s ease;
       flex: 1;
       height: 40px;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .nav-item.active {
@@ -418,30 +369,188 @@
     .hidden {
       display: none !important;
     }
+
+    /* DESKTOP LAYOUT DENGAN SIDEBAR & WADAH SCROLL INTERNAL RAPI */
+    @media (min-width: 768px) {
+      body {
+        background-color: #F1F5F9;
+      }
+
+      .app-container {
+        max-width: 100vw;
+        height: 100dvh;
+        flex-direction: row;
+        overflow: hidden;
+      }
+
+      .desktop-sidebar {
+        display: flex;
+        flex-direction: column;
+        width: 260px;
+        background-color: #FFFFFF;
+        border-right: 1px solid #E2E8F0;
+        padding: 24px 16px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        height: 100dvh;
+      }
+
+      .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 24px;
+        padding-left: 8px;
+      }
+
+      .sidebar-brand h2 {
+        color: #00796B;
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.4px;
+      }
+
+      .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .sidebar-section-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #94A3B8;
+        letter-spacing: 0.5px;
+        margin: 18px 0 6px 10px;
+        text-transform: uppercase;
+      }
+
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .sidebar-item:hover, .sidebar-item.active {
+        background-color: #00796B;
+        color: #FFFFFF;
+      }
+
+      .sidebar-item svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        flex-shrink: 0;
+      }
+
+      .bottom-nav {
+        display: none !important;
+      }
+
+      .main-content {
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        min-height: 0 !important;
+        padding: 24px 40px 180px 40px !important;
+        max-width: 1200px;
+        margin: 0 auto;
+        overflow-y: auto !important;
+        flex: 1;
+        box-sizing: border-box;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- OVERLAY UNTUK HALAMAN LOGIN DINAMIS -->
   <div id="login-overlay"></div>
 
-  <!-- CONTAINER UTAMA APLIKASI -->
   <div class="app-container" id="app-container">
 
-    <!-- AREA KONTEN UTAMA (SPA CONTAINER WITH WORKING SCROLL) -->
+    <aside class="desktop-sidebar">
+      <div class="sidebar-brand">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        <h2>WargaKu</h2>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="javascript:void(0)" class="sidebar-item active" onclick="switchPage('beranda', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+          <span>Beranda</span>
+        </a>
+
+        <a href="javascript:void(0)" class="sidebar-item" onclick="switchPage('profil', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>Profil</span>
+        </a>
+
+        <a href="javascript:void(0)" class="sidebar-item" onclick="switchPage('event', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Event</span>
+        </a>
+
+        <a href="javascript:void(0)" class="sidebar-item" onclick="switchPage('pesan', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <span>Pesan</span>
+        </a>
+
+        <div class="sidebar-section-label">Pengurus</div>
+
+        <a href="javascript:void(0)" class="sidebar-item" onclick="switchPage('acara-kegiatan', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Acara & Kegiatan</span>
+        </a>
+
+        <a href="javascript:void(0)" class="sidebar-item" onclick="switchPage('notulen-rapat', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 12h6"></path><path d="M9 16h6"></path></svg>
+          <span>Notulen Rapat</span>
+        </a>
+
+        <a href="javascript:void(0)" class="sidebar-item" onclick="alert('Fitur Iuran & Kas Warga')">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+          <span>Iuran & Kas Warga</span>
+        </a>
+
+        <a href="javascript:void(0)" class="sidebar-item" onclick="alert('Fitur Surat Pengantar')">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>Surat Pengantar</span>
+        </a>
+
+        <div class="sidebar-section-label">Administrator</div>
+
+        <a href="javascript:void(0)" class="sidebar-item" onclick="switchPage('setting-user', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Keamanan Akun</span>
+        </a>
+
+        <a href="javascript:void(0)" class="sidebar-item" onclick="switchPage('profil-wilayah', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>Profil Wilayah</span>
+        </a>
+      </nav>
+    </aside>
+
     <main class="main-content">
       
-      <!-- HALAMAN BERANDA -->
       <div id="beranda" class="page active">
-
         <header class="topbar-banner">
           <div class="topbar-header">
             <h1 class="brand-title">WargaKu</h1>
             
-            <!-- TOMBOL AVATAR BADGE -->
             <div class="avatar-badge" id="user-avatar-initials" onclick="toggleProfileDropdown(event)">PR</div>
 
-            <!-- MENU DROPDOWN PROFILE -->
             <div class="profile-dropdown hidden" id="profile-dropdown-menu">
               <div class="dropdown-header">
                 <div class="dropdown-user-name" id="dropdown-user-name">Pengurus RT</div>
@@ -468,7 +577,6 @@
 
           </div>
 
-          <!-- CARD USER PROFIL -->
           <div class="profile-card">
             <div class="profile-img-wrapper">
               <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Foto Pengurus RT">
@@ -497,34 +605,44 @@
           </div>
         </div>
 
-        <!-- SEKSI PAPAN INFORMASI WILAYAH TERBARU -->
         <div class="info-board-section">
           <div class="info-board-title-wrap">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
               <path d="M11 21.82V12a10 10 0 0 0 10.82 9.82A10.05 10.05 0 0 1 11 21.82z"></path>
-              <path d="M12 2A10 10 0 0 0 2 12a10.05 10.05 0 0 0 9 9.82V12z"></path>
+              <path d="M12 2A10 10 0 0 0 2 12a10.05 10.05 0 0 1 11 21.82z"></path>
             </svg>
             <span class="info-board-header-title">INFORMASI WILAYAH TERBARU</span>
           </div>
 
-          <!-- KARTU INFORMASI UTAMA (DINAMIS DARI FIRESTORE) -->
           <div class="info-board-card" id="beranda-info-card-container">
             <p style="color: #94A3B8; font-style: italic; font-size: 12px; margin: 0;">Memuat informasi wilayah...</p>
           </div>
         </div>
 
+        <div class="info-board-section" style="margin-top: 20px;">
+          <div class="info-board-title-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+              <path d="M9 12h6"></path>
+              <path d="M9 16h6"></path>
+            </svg>
+            <span class="info-board-header-title">HASIL NOTULEN RAPAT TERBARU</span>
+          </div>
+
+          <div class="info-board-card" id="beranda-notulen-card-container">
+            <p style="color: #94A3B8; font-style: italic; font-size: 12px; margin: 0;">Memuat notulen rapat terbaru...</p>
+          </div>
+        </div>
+
       </div>
 
-      <!-- KONTEN PROFIL WILAYAH -->
       <div id="profil" class="page"></div>
-
-      <!-- HALAMAN EVENT -->
       <div id="event" class="page"></div>
-
-      <!-- HALAMAN PESAN -->
+      <div id="acara-kegiatan" class="page"></div>
+      <div id="notulen-rapat" class="page"></div>
       <div id="pesan" class="page"></div>
-
       <div id="more" class="page"></div>
       <div id="admin-panel" class="page"></div>
       <div id="pengaturan" class="page"></div>
@@ -532,7 +650,6 @@
       <div id="profil-wilayah" class="page"></div>
     </main>
 
-    <!-- BOTTOM NAVIGATION BAR FIXED DI BAWAH -->
     <nav class="bottom-nav">
       <a href="javascript:void(0)" class="nav-item active" onclick="switchPage('beranda', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

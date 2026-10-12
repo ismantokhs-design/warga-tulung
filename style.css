@@ -21,10 +21,15 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* REVISI BODY: Mengubah padding-bottom dari 84px menjadi 180px & mengaktifkan scroll secara bebas */
 body {
   background-color: var(--bg-main);
   color: var(--text-main);
-  padding-bottom: 84px;
+  min-height: 100vh;
+  height: auto !important;
+  padding-bottom: 180px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
 
 .hidden { display: none !important; }
@@ -183,13 +188,17 @@ body {
   color: var(--text-muted);
 }
 
-/* CONTENT & CARDS */
-.content {
+/* CONTENT & CARDS (FLEKSIBEL MEMANJANG) */
+.content, .main-content {
   padding: 20px;
+  height: auto !important;
+  min-height: auto;
+  overflow: visible !important;
+  padding-bottom: 120px !important;
 }
 
 .page { display: none; }
-.page.active { display: block; }
+.page.active { display: block !important; }
 
 .section-title {
   margin-bottom: 16px;

@@ -9,7 +9,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* TOPBAR CLEAN & PUTIH MINIMALIS */
   .event-topbar-clean {
     background: #F8FAFC;
     padding: 8px 0 12px 0;
@@ -31,7 +30,6 @@
     line-height: 1.3;
   }
 
-  /* Filter Periode Dropdown Bar */
   .event-filter-bar {
     background: #FFFFFF;
     border-radius: 12px;
@@ -62,7 +60,6 @@
     cursor: pointer;
   }
 
-  /* List Event Grid / Cards */
   .event-cards-grid {
     display: flex;
     flex-direction: column;
@@ -143,14 +140,11 @@
 </style>
 
 <div class="event-page-container">
-
-  <!-- TOPBAR CLEAN & PUTIH MINIMALIS -->
   <div class="event-topbar-clean">
     <h2 class="event-topbar-title">Event Terbaru</h2>
     <p class="event-topbar-subtitle">Dokumentasi dan informasi kegiatan warga RT</p>
   </div>
 
-  <!-- FILTER PERIODE -->
   <div class="event-filter-bar">
     <div class="event-filter-icon">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -168,71 +162,8 @@
     </select>
   </div>
 
-  <!-- CONTAINER REALTIME DAFTAR EVENT -->
+  <!-- CONTAINER UTAMA UNTUK EVENT -->
   <div class="event-cards-grid" id="public-events-list">
     <div class="event-empty-box">Memuat agenda kegiatan...</div>
   </div>
-
 </div>
-
-<!-- SCRIPT AMAN DENGAN DELEGATION ONLOAD -->
-<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onload="(async () => {
-  try {
-    const config = await import('./firebase-config.js');
-    const container = document.getElementById('public-events-list');
-    if (!container || !config.db) return;
-
-    const eventsRef = config.collection(config.db, 'events');
-    const q = config.query(eventsRef, config.orderBy('createdAt', 'desc'));
-
-    config.onSnapshot(q, (snapshot) => {
-      container.innerHTML = '';
-
-      if (snapshot.empty) {
-        container.innerHTML = '<div class=&quot;event-empty-box&quot;>Belum ada kegiatan/event warga.</div>';
-        return;
-      }
-
-      snapshot.forEach((docSnap) => {
-        const item = docSnap.data();
-        if (item.aktif === false) return;
-
-        let tglFormatted = 'Tanggal tidak ditentukan';
-        if (item.tanggal) {
-          const d = new Date(item.tanggal);
-          tglFormatted = d.toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-          });
-        }
-
-        const card = document.createElement('div');
-        card.className = 'event-display-card';
-
-        const defaultImg = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=600';
-
-        card.innerHTML = `
-          <img src=&quot;${item.imageUrl || defaultImg}&quot; alt=&quot;${item.judul || 'Event'}&quot; class=&quot;event-card-banner&quot;>
-          <div class=&quot;event-card-body&quot;>
-            <span class=&quot;event-card-date&quot;>${tglFormatted}</span>
-            <h3 class=&quot;event-card-title&quot;>${item.judul || 'Tanpa Judul'}</h3>
-            <p class=&quot;event-card-desc&quot;>${item.deskripsi || '-'}</p>
-            <a href=&quot;javascript:void(0)&quot; class=&quot;event-read-more&quot;>
-              Baca selengkapnya 
-              <svg width=&quot;13&quot; height=&quot;13&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot;><polyline points=&quot;9 18 15 12 9 6&quot;></polyline></svg>
-            </a>
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-
-      if (container.children.length === 0) {
-        container.innerHTML = '<div class=&quot;event-empty-box&quot;>Belum ada event aktif.</div>';
-      }
-    });
-  } catch(err) {
-    console.error('Gagal memuat modul event:', err);
-  }
-})()" style="display:none;" />
