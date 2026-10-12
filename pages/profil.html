@@ -1,20 +1,12 @@
 <style>
-  /* KUNCI UTAMA: MEMUNGKINKAN GESER NAIK TURUN DI DALAM CONTAINER */
-  .profil-view-container {
+  /* KONTROL UTAMA HALAMAN PROFIL */
+  .profil-view-wrapper {
+    display: flex;
+    flex-direction: column;
     height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: none; /* IE & Edge */
-    scrollbar-width: none;  /* Firefox */
-    padding-bottom: 120px; /* Ruang ekstra agar bagian bawah tidak tertutup Bottom Nav */
-    animation: fadeInProfil 0.2s ease-out;
-  }
-
-  /* Sembunyikan scrollbar visual */
-  .profil-view-container::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
+    width: 100%;
+    overflow: hidden; /* Mencegah halaman utama bergoyang */
+    animation: fadeInProfil 0.25s ease-out;
   }
 
   @keyframes fadeInProfil {
@@ -22,29 +14,37 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* 1. BAGIAN ATAS: DIAM TETAP DI TEMPAT (FIXED) */
+  .profil-fixed-header {
+    flex-shrink: 0; /* Menjaga ukuran agar tidak menyusut */
+    background-color: #F8FAFC;
+    padding-bottom: 8px;
+    z-index: 10;
+  }
+
   /* Header Title Minimalis */
   .profil-header-title {
     color: #00796B;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 800;
     margin: 0;
+    letter-spacing: -0.2px;
   }
 
   .profil-header-subtitle {
     color: #64748B;
-    font-size: 11px;
+    font-size: 10.5px;
     margin-top: 2px;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
 
   /* Banner Card Profil Wilayah Compact */
   .wilayah-banner-card {
     background: linear-gradient(135deg, #00796B 0%, #004D40 100%);
-    border-radius: 16px;
-    padding: 14px;
+    border-radius: 14px;
+    padding: 12px 14px;
     color: #FFFFFF;
-    box-shadow: 0 6px 16px rgba(0, 121, 107, 0.18);
-    margin-bottom: 14px;
+    box-shadow: 0 4px 12px rgba(0, 121, 107, 0.15);
     position: relative;
     overflow: hidden;
   }
@@ -54,8 +54,8 @@
     position: absolute;
     right: -15px;
     bottom: -15px;
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
     background: rgba(255, 255, 255, 0.06);
     border-radius: 50%;
     pointer-events: none;
@@ -67,45 +67,63 @@
     gap: 4px;
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(4px);
-    padding: 3px 8px;
-    border-radius: 16px;
-    font-size: 10px;
+    padding: 2.5px 7px;
+    border-radius: 12px;
+    font-size: 9.5px;
     font-weight: 700;
     letter-spacing: 0.4px;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .wilayah-main-name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 800;
     line-height: 1.25;
     margin-bottom: 2px;
   }
 
   .wilayah-sub-location {
-    font-size: 11.5px;
+    font-size: 11px;
     opacity: 0.9;
     font-weight: 500;
+  }
+
+  /* 2. BAGIAN BAWAH: HANYA AREA INI YANG BISA DI-SCROLL */
+  .profil-scrollable-body {
+    flex: 1;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding-top: 8px;
+    padding-bottom: 120px; /* Jarak aman dari Bottom Nav */
+  }
+
+  .profil-scrollable-body::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 
   /* Info Card Box */
   .info-card {
     background: #FFFFFF;
-    border-radius: 16px;
+    border-radius: 14px;
     border: 1px solid #E2E8F0;
-    padding: 14px;
+    padding: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     margin-bottom: 12px;
   }
 
   .info-card-title {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     color: #94A3B8;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -120,13 +138,13 @@
 
   .info-item {
     background-color: #F8FAFC;
-    padding: 8px 10px;
-    border-radius: 10px;
+    padding: 7px 9px;
+    border-radius: 8px;
     border: 1px solid #F1F5F9;
   }
 
   .info-label {
-    font-size: 9.5px;
+    font-size: 9px;
     font-weight: 700;
     color: #64748B;
     letter-spacing: 0.4px;
@@ -135,14 +153,14 @@
   }
 
   .info-value {
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
     color: #0F172A;
     word-break: break-word;
   }
 
   .info-description-text {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #334155;
     line-height: 1.5;
     white-space: pre-line;
@@ -157,53 +175,50 @@
     padding-top: 2px;
   }
 
-  /* Node Utama (Dukuh) */
   .org-node-dukuh {
     background: linear-gradient(135deg, #00796B, #004D40);
     color: #FFFFFF;
-    padding: 10px 14px;
-    border-radius: 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
     text-align: center;
-    min-width: 160px;
-    box-shadow: 0 3px 10px rgba(0, 121, 107, 0.18);
+    min-width: 150px;
+    box-shadow: 0 3px 10px rgba(0, 121, 107, 0.15);
     position: relative;
   }
 
   .org-node-dukuh .node-role {
-    font-size: 9px;
+    font-size: 8.5px;
     font-weight: 700;
     color: #A7F3D0;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
   }
 
   .org-node-dukuh .node-name {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     margin-top: 2px;
   }
 
   .org-node-dukuh .node-contact {
-    font-size: 10px;
+    font-size: 9.5px;
     opacity: 0.9;
     margin-top: 1px;
   }
 
-  /* Garis Penghubung Vertikal */
   .org-line-vertical {
     width: 2px;
-    height: 14px;
+    height: 12px;
     background-color: #00796B;
   }
 
-  /* Container Baris RT */
   .org-rt-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 8px;
     width: 100%;
     position: relative;
-    padding-top: 10px;
+    padding-top: 8px;
   }
 
   .org-rt-grid::before {
@@ -216,12 +231,11 @@
     background-color: #CBD5E1;
   }
 
-  /* Card Node RT */
   .org-node-rt {
     background: #F8FAFC;
     border: 1.2px solid #E2E8F0;
-    border-radius: 12px;
-    padding: 10px;
+    border-radius: 10px;
+    padding: 8px;
     position: relative;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
   }
@@ -229,27 +243,27 @@
   .org-node-rt::before {
     content: '';
     position: absolute;
-    top: -10px;
+    top: -8px;
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
-    height: 10px;
+    height: 8px;
     background-color: #CBD5E1;
   }
 
   .rt-badge-header {
     background: #E8F5E9;
     color: #00796B;
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 800;
-    padding: 2px 6px;
-    border-radius: 5px;
+    padding: 2px 5px;
+    border-radius: 4px;
     display: inline-block;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .rt-person-row {
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
 
   .rt-person-row:last-child {
@@ -257,127 +271,130 @@
   }
 
   .rt-person-label {
-    font-size: 8.5px;
+    font-size: 8px;
     font-weight: 700;
     color: #64748B;
     text-transform: uppercase;
   }
 
   .rt-person-val {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     color: #0F172A;
   }
 </style>
 
-<div class="profil-view-container">
+<div class="profil-view-wrapper">
 
-  <!-- HEADER JUDUL -->
-  <h2 class="profil-header-title">Profil Wilayah</h2>
-  <p class="profil-header-subtitle">Informasi administrasi dan gambaran umum wilayah setempat.</p>
+  <!-- 1. HEADER & BANNER DIAM DI ATAS (FIXED / NON-SCROLL) -->
+  <div class="profil-fixed-header">
+    <h2 class="profil-header-title">Profil Wilayah</h2>
+    <p class="profil-header-subtitle">Informasi administrasi dan gambaran umum wilayah setempat.</p>
 
-  <!-- BANNER PROFIL DUKUH -->
-  <div class="wilayah-banner-card">
-    <div class="wilayah-badge-tag">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-        <circle cx="12" cy="10" r="3"></circle>
-      </svg>
-      Wilayah Kependudukan
+    <div class="wilayah-banner-card">
+      <div class="wilayah-badge-tag">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        Wilayah Kependudukan
+      </div>
+      <div class="wilayah-main-name" id="view-pedukuhan">Memuat...</div>
+      <div class="wilayah-sub-location" id="view-desa-kecamatan">-</div>
     </div>
-    <div class="wilayah-main-name" id="view-pedukuhan">Memuat...</div>
-    <div class="wilayah-sub-location" id="view-desa-kecamatan">-</div>
   </div>
 
-  <!-- KARTU STRUKTUR ORGANISASI (DIAGRAM TREE) -->
-  <div class="info-card">
-    <div class="info-card-title">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-      Struktur Organisasi Pedukuhan
-    </div>
+  <!-- 2. KONTEN YANG BISA DI-SCROLL NAIK TURUN -->
+  <div class="profil-scrollable-body">
 
-    <div class="org-tree-wrapper">
-      <!-- DUKUH (PUNCAK STRUKTUR) -->
-      <div class="org-node-dukuh">
-        <div class="node-role">Kepala Pedukuhan (Dukuh)</div>
-        <div class="node-name" id="val-dukuh-nama">-</div>
-        <div class="node-contact" id="val-dukuh-kontak">-</div>
+    <!-- KARTU STRUKTUR ORGANISASI -->
+    <div class="info-card">
+      <div class="info-card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        Struktur Organisasi Pedukuhan
       </div>
 
-      <!-- GARIS HUBUNG -->
-      <div class="org-line-vertical"></div>
+      <div class="org-tree-wrapper">
+        <div class="org-node-dukuh">
+          <div class="node-role">Kepala Pedukuhan (Dukuh)</div>
+          <div class="node-name" id="val-dukuh-nama">-</div>
+          <div class="node-contact" id="val-dukuh-kontak">-</div>
+        </div>
 
-      <!-- GRID PENGURUS RT -->
-      <div class="org-rt-grid" id="container-rt-tree">
-        <div style="font-size: 11px; color: #94A3B8; text-align: center; grid-column: 1 / -1;">
-          Memuat struktur RT...
+        <div class="org-line-vertical"></div>
+
+        <div class="org-rt-grid" id="container-rt-tree">
+          <div style="font-size: 11px; color: #94A3B8; text-align: center; grid-column: 1 / -1;">
+            Memuat struktur RT...
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- KARTU RINCIAN ADMINISTRASI -->
-  <div class="info-card">
-    <div class="info-card-title">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-        <polyline points="14 2 14 8 20 8"></polyline>
-      </svg>
-      Detail Wilayah Administrasi
+    <!-- KARTU RINCIAN ADMINISTRASI -->
+    <div class="info-card">
+      <div class="info-card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        Detail Wilayah Administrasi
+      </div>
+
+      <div class="info-grid-2" style="margin-bottom: 8px;">
+        <div class="info-item">
+          <div class="info-label">Pedukuhan</div>
+          <div class="info-value" id="val-pedukuhan">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Desa / Kelurahan</div>
+          <div class="info-value" id="val-desa">-</div>
+        </div>
+      </div>
+
+      <div class="info-grid-2" style="margin-bottom: 8px;">
+        <div class="info-item">
+          <div class="info-label">Kecamatan</div>
+          <div class="info-value" id="val-kecamatan">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Kabupaten / Kota</div>
+          <div class="info-value" id="val-kabupaten">-</div>
+        </div>
+      </div>
+
+      <div class="info-grid-2">
+        <div class="info-item">
+          <div class="info-label">Provinsi</div>
+          <div class="info-value" id="val-provinsi">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Kode Pos</div>
+          <div class="info-value" id="val-kodepos">-</div>
+        </div>
+      </div>
     </div>
 
-    <div class="info-grid-2" style="margin-bottom: 8px;">
-      <div class="info-item">
-        <div class="info-label">Pedukuhan</div>
-        <div class="info-value" id="val-pedukuhan">-</div>
+    <!-- KARTU DESKRIPSI -->
+    <div class="info-card">
+      <div class="info-card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        Tentang Wilayah
       </div>
-      <div class="info-item">
-        <div class="info-label">Desa / Kelurahan</div>
-        <div class="info-value" id="val-desa">-</div>
-      </div>
-    </div>
-
-    <div class="info-grid-2" style="margin-bottom: 8px;">
-      <div class="info-item">
-        <div class="info-label">Kecamatan</div>
-        <div class="info-value" id="val-kecamatan">-</div>
-      </div>
-      <div class="info-item">
-        <div class="info-label">Kabupaten / Kota</div>
-        <div class="info-value" id="val-kabupaten">-</div>
+      <div class="info-description-text" id="val-deskripsi">
+        Belum ada deskripsi profil wilayah yang ditambahkan.
       </div>
     </div>
 
-    <div class="info-grid-2">
-      <div class="info-item">
-        <div class="info-label">Provinsi</div>
-        <div class="info-value" id="val-provinsi">-</div>
-      </div>
-      <div class="info-item">
-        <div class="info-label">Kode Pos</div>
-        <div class="info-value" id="val-kodepos">-</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- KARTU DESKRIPSI TENTANG WILAYAH -->
-  <div class="info-card">
-    <div class="info-card-title">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-      Tentang Wilayah
-    </div>
-    <div class="info-description-text" id="val-deskripsi">
-      Belum ada deskripsi profil wilayah yang ditambahkan.
-    </div>
   </div>
 
 </div>

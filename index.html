@@ -11,6 +11,7 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      scroll-behavior: smooth;
     }
 
     ::-webkit-scrollbar {
@@ -30,6 +31,7 @@
       align-items: center;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      overscroll-behavior: none;
     }
 
     #login-overlay {
@@ -61,38 +63,173 @@
       display: none;
     }
 
+    /* KONTEN UTAMA & WADAH KHALAYAK PERBAIKAN SCROLL */
+    .main-content {
+      width: 100%;
+      height: calc(100dvh - 54px);
+      padding: 8px 16px 140px 16px !important; /* Tambahkan ruang bawah lebih luas (140px) */
+      flex: 1;
+      overflow-y: auto !important;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      box-sizing: border-box;
+    }
+
+    .main-content::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    .page {
+      display: none;
+      width: 100%;
+      height: auto; /* Ubah dari 100% ke auto agar kontainer bertambah panjang sesuai isi */
+    }
+
+    .page.active {
+      display: block !important;
+      animation: pageFadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes pageFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KHUSUS HALAMAN PROFIL WILAYAH: MATIKAN SCROLL LUAR */
+    #profil-wilayah.active {
+      display: flex !important;
+      flex-direction: column;
+      overflow: hidden !important;
+      height: 100%;
+    }
+
+    /* HEADER & BANNER PROFIL WILAYAH DIAM TOTAL */
+    .profil-fixed-header {
+      flex-shrink: 0;
+      background-color: #F8FAFC;
+      padding-bottom: 8px;
+      z-index: 50;
+    }
+
+    .profil-header-title {
+      color: #00796B;
+      font-size: 16px;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .profil-header-subtitle {
+      color: #64748B;
+      font-size: 10.5px;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+
+    .wilayah-banner-card {
+      background: linear-gradient(135deg, #00796B 0%, #004D40 100%);
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(0, 121, 107, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wilayah-banner-card::after {
+      content: '';
+      position: absolute;
+      right: -15px;
+      bottom: -15px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 50%;
+    }
+
+    .wilayah-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      padding: 2.5px 7px;
+      border-radius: 12px;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .wilayah-main-name {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 2px;
+    }
+
+    .wilayah-sub-location {
+      font-size: 11px;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    /* AREA PROFIL WILAYAH YANG BISA DI-SCROLL */
+    .profil-scrollable-body {
+      flex: 1;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 120px;
+      scroll-behavior: smooth;
+    }
+
+    .profil-scrollable-body::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    /* BANNER HEADER BERANDA STICKY */
     .topbar-banner {
+      position: sticky;
+      top: 0;
+      z-index: 100;
       background-color: #E8F5E9;
-      padding: 16px 16px 18px 16px;
+      padding: 12px 16px 14px 16px;
       border-bottom-left-radius: 20px;
       border-bottom-right-radius: 20px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
       flex-shrink: 0;
       margin-bottom: 8px;
+      transition: all 0.3s ease;
     }
 
     .topbar-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       position: relative;
     }
 
     .brand-title {
       color: #00796B;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       letter-spacing: -0.3px;
     }
 
     .avatar-badge {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       background-color: #00875A;
       color: #FFFFFF;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -100,18 +237,18 @@
       box-shadow: 0 2px 6px rgba(0, 135, 90, 0.2);
       cursor: pointer;
       user-select: none;
-      transition: transform 0.1s ease;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
     }
 
     .avatar-badge:active {
-      transform: scale(0.95);
+      transform: scale(0.92);
     }
 
     .profile-dropdown {
       position: absolute;
-      top: 44px;
+      top: 40px;
       right: 0;
-      width: 200px;
+      width: 190px;
       background: #FFFFFF;
       border-radius: 14px;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
@@ -119,15 +256,21 @@
       padding: 6px 0;
       z-index: 1000;
       overflow: hidden;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .dropdown-header {
-      padding: 8px 14px 10px 14px;
+      padding: 8px 12px;
       border-bottom: 1px solid #F1F5F9;
     }
 
     .dropdown-user-name {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: #0F172A;
       white-space: nowrap;
@@ -136,7 +279,7 @@
     }
 
     .dropdown-user-role {
-      font-size: 10px;
+      font-size: 9.5px;
       color: #00875A;
       font-weight: 600;
       margin-top: 2px;
@@ -147,8 +290,8 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 14px;
-      font-size: 12px;
+      padding: 8px 12px;
+      font-size: 11.5px;
       color: #334155;
       text-decoration: none;
       cursor: pointer;
@@ -171,18 +314,18 @@
 
     .profile-card {
       background-color: #FFFFFF;
-      border-radius: 16px;
-      padding: 10px 14px;
+      border-radius: 14px;
+      padding: 8px 12px;
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
 
     .profile-img-wrapper {
       position: relative;
-      width: 42px;
-      height: 42px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       overflow: hidden;
       border: 2px solid #00875A;
@@ -196,104 +339,82 @@
     }
 
     .profile-info .greeting {
-      font-size: 14px;
+      font-size: 12.5px;
       font-weight: 700;
       color: #0F172A;
-      line-height: 1.2;
+      line-height: 1.25;
     }
 
     .profile-info .location {
-      font-size: 11px;
+      font-size: 10.5px;
       color: #64748B;
-      margin-top: 2px;
-    }
-
-    /* AREA KONTEN UTAMA MOBILE */
-    .main-content {
-      width: 100%;
-      height: calc(100dvh - 54px);
-      padding: 12px 16px 140px 16px !important;
-      flex: 1;
-      overflow-y: auto !important;
-      -webkit-overflow-scrolling: touch;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      box-sizing: border-box;
-    }
-
-    .main-content::-webkit-scrollbar {
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
-    }
-
-    .page {
-      display: none;
-      width: 100%;
-    }
-
-    .page.active {
-      display: block !important;
+      margin-top: 1px;
     }
 
     .section-title {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 800;
       color: #0F172A;
       margin-bottom: 2px;
     }
 
     .section-subtitle {
-      font-size: 11px;
+      font-size: 10.5px;
       color: #64748B;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 18px;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
     .stat-card {
       background: #FFFFFF;
-      border-radius: 16px;
-      padding: 14px 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
       border: 1px solid #F1F5F9;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     .stat-indicator {
-      width: 12px;
-      height: 4px;
+      width: 10px;
+      height: 3px;
       background-color: #00875A;
       border-radius: 2px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .stat-value {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
       color: #0F172A;
       margin-bottom: 2px;
     }
 
     .stat-label {
-      font-size: 12px;
+      font-size: 10.5px;
       color: #64748B;
       font-weight: 500;
     }
 
     .info-board-section {
-      margin-top: 14px;
+      margin-top: 12px;
     }
 
     .info-board-title-wrap {
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .info-board-title-wrap svg {
@@ -302,7 +423,7 @@
     }
 
     .info-board-header-title {
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 800;
       color: #0A3966;
       letter-spacing: 0.2px;
@@ -311,13 +432,175 @@
 
     .info-board-card {
       background: #FFFFFF;
-      border-radius: 16px;
-      padding: 14px 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
       border: 1px solid #F1F5F9;
       display: flex;
       flex-direction: column;
+      gap: 6px;
+      font-size: 11.5px;
+      line-height: 1.4;
+      transition: box-shadow 0.2s ease;
+    }
+
+    /* INFO CARD PROFIL WILAYAH */
+    .info-card {
+      background: #FFFFFF;
+      border-radius: 14px;
+      border: 1px solid #E2E8F0;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      margin-bottom: 12px;
+    }
+
+    .info-card-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #94A3B8;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
+    }
+
+    .info-item {
+      background-color: #F8FAFC;
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1px solid #F1F5F9;
+    }
+
+    .info-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .info-value {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #0F172A;
+      word-break: break-word;
+    }
+
+    .info-description-text {
+      font-size: 11.5px;
+      color: #334155;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .org-tree-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .org-node-dukuh {
+      background: linear-gradient(135deg, #00796B, #004D40);
+      color: #FFFFFF;
+      padding: 8px 12px;
+      border-radius: 10px;
+      text-align: center;
+      min-width: 150px;
+    }
+
+    .org-node-dukuh .node-role {
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #A7F3D0;
+      text-transform: uppercase;
+    }
+
+    .org-node-dukuh .node-name {
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .org-node-dukuh .node-contact {
+      font-size: 9.5px;
+      opacity: 0.9;
+    }
+
+    .org-line-vertical {
+      width: 2px;
+      height: 12px;
+      background-color: #00796B;
+    }
+
+    .org-rt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      width: 100%;
+      position: relative;
+      padding-top: 8px;
+    }
+
+    .org-rt-grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background-color: #CBD5E1;
+    }
+
+    .org-node-rt {
+      background: #F8FAFC;
+      border: 1.2px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 8px;
+      position: relative;
+    }
+
+    .org-node-rt::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 8px;
+      background-color: #CBD5E1;
+    }
+
+    .rt-badge-header {
+      background: #E8F5E9;
+      color: #00796B;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .rt-person-label {
+      font-size: 8px;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+    }
+
+    .rt-person-val {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #0F172A;
     }
 
     .bottom-nav {
@@ -344,14 +627,18 @@
       justify-content: center;
       text-decoration: none;
       color: #64748B;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 500;
       gap: 2px;
       cursor: pointer;
-      transition: color 0.2s ease;
+      transition: color 0.2s ease, transform 0.15s ease;
       flex: 1;
       height: 40px;
       -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-item:active {
+      transform: scale(0.94);
     }
 
     .nav-item.active {
@@ -360,17 +647,18 @@
     }
 
     .nav-item svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       stroke: currentColor;
       flex-shrink: 0;
+      transition: transform 0.2s ease;
     }
 
     .hidden {
       display: none !important;
     }
 
-    /* DESKTOP LAYOUT DENGAN SIDEBAR & WADAH SCROLL INTERNAL RAPI */
+    /* TAMPILAN DESKTOP */
     @media (min-width: 768px) {
       body {
         background-color: #F1F5F9;
@@ -386,10 +674,10 @@
       .desktop-sidebar {
         display: flex;
         flex-direction: column;
-        width: 260px;
+        width: 250px;
         background-color: #FFFFFF;
         border-right: 1px solid #E2E8F0;
-        padding: 24px 16px;
+        padding: 20px 14px;
         flex-shrink: 0;
         overflow-y: auto;
         height: 100dvh;
@@ -398,14 +686,14 @@
       .sidebar-brand {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin-bottom: 24px;
-        padding-left: 8px;
+        gap: 8px;
+        margin-bottom: 20px;
+        padding-left: 6px;
       }
 
       .sidebar-brand h2 {
         color: #00796B;
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 800;
         letter-spacing: -0.4px;
       }
@@ -417,26 +705,26 @@
       }
 
       .sidebar-section-label {
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 700;
         color: #94A3B8;
         letter-spacing: 0.5px;
-        margin: 18px 0 6px 10px;
+        margin: 16px 0 6px 8px;
         text-transform: uppercase;
       }
 
       .sidebar-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 10px 14px;
-        border-radius: 10px;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: 8px;
         color: #475569;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
         text-decoration: none;
         cursor: pointer;
-        transition: all 0.15s ease;
+        transition: all 0.2s ease;
       }
 
       .sidebar-item:hover, .sidebar-item.active {
@@ -445,8 +733,8 @@
       }
 
       .sidebar-item svg {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
         stroke: currentColor;
         flex-shrink: 0;
       }
@@ -459,7 +747,7 @@
         height: 100dvh !important;
         max-height: 100dvh !important;
         min-height: 0 !important;
-        padding: 24px 40px 180px 40px !important;
+        padding: 20px 32px 120px 32px !important;
         max-width: 1200px;
         margin: 0 auto;
         overflow-y: auto !important;
@@ -616,11 +904,11 @@
           </div>
 
           <div class="info-board-card" id="beranda-info-card-container">
-            <p style="color: #94A3B8; font-style: italic; font-size: 12px; margin: 0;">Memuat informasi wilayah...</p>
+            <p style="color: #94A3B8; font-style: italic; font-size: 11.5px; margin: 0;">Memuat informasi wilayah...</p>
           </div>
         </div>
 
-        <div class="info-board-section" style="margin-top: 20px;">
+        <div class="info-board-section" style="margin-top: 18px;">
           <div class="info-board-title-wrap">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
@@ -632,7 +920,7 @@
           </div>
 
           <div class="info-board-card" id="beranda-notulen-card-container">
-            <p style="color: #94A3B8; font-style: italic; font-size: 12px; margin: 0;">Memuat notulen rapat terbaru...</p>
+            <p style="color: #94A3B8; font-style: italic; font-size: 11.5px; margin: 0;">Memuat notulen rapat terbaru...</p>
           </div>
         </div>
 
@@ -647,7 +935,116 @@
       <div id="admin-panel" class="page"></div>
       <div id="pengaturan" class="page"></div>
       <div id="setting-user" class="page"></div>
-      <div id="profil-wilayah" class="page"></div>
+      
+      <!-- HALAMAN PROFIL WILAYAH (HEADER & BANNER DIAM TOTAL) -->
+      <div id="profil-wilayah" class="page">
+        <!-- 1. HEADER & BANNER DIAM DI ATAS -->
+        <div class="profil-fixed-header">
+          <h2 class="profil-header-title">Profil Wilayah</h2>
+          <p class="profil-header-subtitle">Informasi administrasi dan gambaran umum wilayah setempat.</p>
+
+          <div class="wilayah-banner-card">
+            <div class="wilayah-badge-tag">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              Wilayah Kependudukan
+            </div>
+            <div class="wilayah-main-name" id="view-pedukuhan">Pedukuhan Tulung</div>
+            <div class="wilayah-sub-location" id="view-desa-kecamatan">Desa Srihardono, Kec. Pundong</div>
+          </div>
+        </div>
+
+        <!-- 2. HANYA AREA DI BAWAH INI YANG BISA DI-SCROLL -->
+        <div class="profil-scrollable-body">
+          <div class="info-card">
+            <div class="info-card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Struktur Organisasi Pedukuhan
+            </div>
+
+            <div class="org-tree-wrapper">
+              <div class="org-node-dukuh">
+                <div class="node-role">Kepala Pedukuhan (Dukuh)</div>
+                <div class="node-name" id="val-dukuh-nama">-</div>
+                <div class="node-contact" id="val-dukuh-kontak">-</div>
+              </div>
+
+              <div class="org-line-vertical"></div>
+
+              <div class="org-rt-grid" id="container-rt-tree">
+                <div style="font-size: 11px; color: #94A3B8; text-align: center; grid-column: 1 / -1;">
+                  Memuat struktur RT...
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              Detail Wilayah Administrasi
+            </div>
+
+            <div class="info-grid-2" style="margin-bottom: 8px;">
+              <div class="info-item">
+                <div class="info-label">Pedukuhan</div>
+                <div class="info-value" id="val-pedukuhan">-</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Desa / Kelurahan</div>
+                <div class="info-value" id="val-desa">-</div>
+              </div>
+            </div>
+
+            <div class="info-grid-2" style="margin-bottom: 8px;">
+              <div class="info-item">
+                <div class="info-label">Kecamatan</div>
+                <div class="info-value" id="val-kecamatan">-</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Kabupaten / Kota</div>
+                <div class="info-value" id="val-kabupaten">-</div>
+              </div>
+            </div>
+
+            <div class="info-grid-2">
+              <div class="info-item">
+                <div class="info-label">Provinsi</div>
+                <div class="info-value" id="val-provinsi">-</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Kode Pos</div>
+                <div class="info-value" id="val-kodepos">-</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00796B" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              Tentang Wilayah
+            </div>
+            <div class="info-description-text" id="val-deskripsi">
+              Belum ada deskripsi profil wilayah yang ditambahkan.
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
 
     <nav class="bottom-nav">
@@ -685,7 +1082,7 @@
       </a>
 
       <a href="javascript:void(0)" id="nav-more-link" class="nav-item" onclick="switchPage('more', this)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke-currentColor stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="1.5" fill="currentColor"></circle>
           <circle cx="19" cy="12" r="1.5" fill="currentColor"></circle>
           <circle cx="5" cy="12" r="1.5" fill="currentColor"></circle>
