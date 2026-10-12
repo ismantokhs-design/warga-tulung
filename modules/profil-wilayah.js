@@ -64,7 +64,7 @@ export async function loadProfilWilayahData() {
   }
 }
 
-// 3. FUNGSI TAMBAH BARIS RT DINAMIS
+// 3. FUNGSI TAMBAH BARIS RT DINAMIS (ELEGANT STYLING)
 function addRtRow(e = null, rtData = { rt: "", ketua: "", kontak: "" }) {
   if (e) e.preventDefault();
 
@@ -75,11 +75,24 @@ function addRtRow(e = null, rtData = { rt: "", ketua: "", kontak: "" }) {
   const card = document.createElement("div");
   card.className = "rt-item-card";
 
+  // RENDER DENGAN STYLE ELEGAN + ICON HAPUS SVG
   card.innerHTML = `
     <div class="rt-item-header">
-      <span class="rt-item-title">DATA RT #${rtIndex}</span>
-      <button type="button" class="btn-remove-rt">Hapus</button>
+      <span class="rt-item-title-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        </svg>
+        <span class="rt-item-title-text">DATA RT #${rtIndex}</span>
+      </span>
+      <button type="button" class="btn-remove-rt">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+        <span>Hapus</span>
+      </button>
     </div>
+
     <div class="grid-two-col">
       <div class="form-group-custom">
         <label>NOMOR RT</label>
@@ -90,7 +103,8 @@ function addRtRow(e = null, rtData = { rt: "", ketua: "", kontak: "" }) {
         <input type="text" class="input-custom input-rt-ketua" placeholder="Nama Ketua RT" value="${rtData.ketua || ''}">
       </div>
     </div>
-    <div class="form-group-custom">
+
+    <div class="form-group-custom" style="margin-bottom: 0;">
       <label>KONTAK KETUA RT (WA)</label>
       <input type="text" class="input-custom input-rt-kontak" placeholder="0812..." value="${rtData.kontak || ''}">
     </div>
@@ -114,8 +128,8 @@ function updateRtTitles() {
   if (!container) return;
   const cards = container.querySelectorAll(".rt-item-card");
   cards.forEach((card, index) => {
-    const title = card.querySelector(".rt-item-title");
-    if (title) title.innerText = `DATA RT #${index + 1}`;
+    const titleText = card.querySelector(".rt-item-title-text");
+    if (titleText) titleText.innerText = `DATA RT #${index + 1}`;
   });
 }
 
